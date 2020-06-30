@@ -5,11 +5,35 @@
  * Distributed under the MIT license (see LICENSE or https://opensource.org/licenses/MIT)
  */
 
-#ifndef ESK8_UTIL_H
-#define ESK8_UTIL_H
+#pragma once
 
-namespace Util {
-        
+#include <nordic_common.h>
+
+/**
+ * Macros for printing 6-byte MAC addresses.
+ */
+#define MAC_FMT "%02X:%02X:%02X:%02X:%02X:%02X"
+#define MAC_ARGS(mac_byte_ptr) \
+    (mac_byte_ptr)[0], (mac_byte_ptr)[1], (mac_byte_ptr)[2], \
+    (mac_byte_ptr)[3], (mac_byte_ptr)[4], (mac_byte_ptr)[5]
+
+/**
+ * Macros for supressing single warnings.
+ */
+#ifdef __GNUC__
+#   define DO_PRAGMA(x) _Pragma (#x)
+#   define SUPPRESS_WARNING_START(warning) \
+        _Pragma("GCC diagnostic push") \
+        DO_PRAGMA(GCC diagnostic ignored warning)
+#   define SUPPRESS_WARNING_END() \
+        _Pragma("GCC diagnostic pop")
+#else
+#   define SUPPRESS_WARNING_START(warning)
+#   define SUPRESS_WARNING_END()
+#endif
+
+namespace util {
+
     /** 
      * Function for initializing the clock.
      */
@@ -27,6 +51,4 @@ namespace Util {
      */
     void enter_sleep_mode();
 
-;}
-
-#endif // ESK8_UTIL_H
+} // namespace util

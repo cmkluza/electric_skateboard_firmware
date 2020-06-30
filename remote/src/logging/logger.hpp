@@ -8,7 +8,9 @@
 #ifndef ESK8_LOGGER_H
 #define ESK8_LOGGER_H
 
-namespace Logger {
+#include <sdk_errors.h>
+
+namespace logger {
     /**
      * Initializes nRF's logger and its backends.
      */

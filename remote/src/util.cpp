@@ -14,18 +14,21 @@
 #include <nrf_soc.h>
 #include <sdk_errors.h>
 
-void Util::clock_init()
+namespace util {
+
+void clock_init()
 {
-    ret_code_t err_code = nrf_drv_clock_init();
-    APP_ERROR_CHECK(err_code);
+    if (!nrf_drv_clock_init_check()) {
+        nrf_drv_clock_init();
+    }
 }
 
-void Util::enable_deep_sleep()
+void enable_deep_sleep()
 {
     SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 }
 
-void Util::enter_sleep_mode()
+void enter_sleep_mode()
 {
     ret_code_t err_code;
 
@@ -40,3 +43,5 @@ void Util::enter_sleep_mode()
     err_code = sd_power_system_off();
     APP_ERROR_CHECK(err_code);
 }
+
+} // namespace util

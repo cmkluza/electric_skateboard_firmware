@@ -16,7 +16,7 @@
       arm_target_device_name="nRF52840_xxAA"
       arm_target_interface_type="SWD"
       c_preprocessor_definitions="CUSTOM_BOARD_INC=adafruit_feather;CONFIG_GPIO_AS_PINRESET;FLOAT_ABI_HARD;FREERTOS;INITIALIZE_USER_SECTIONS;NO_VTOR_CONFIG;NRF52840_XXAA;NRF_SD_BLE_API_VERSION=7;S140;SOFTDEVICE_PRESENT;"
-      c_user_include_directories="../src;../src/boards;../src/logging;../src/ble;../config;../sdk/components;../sdk/components/ble/ble_advertising;../sdk/components/ble/ble_dtm;../sdk/components/ble/ble_racp;../sdk/components/ble/ble_services/ble_ancs_c;../sdk/components/ble/ble_services/ble_ans_c;../sdk/components/ble/ble_services/ble_bas;../sdk/components/ble/ble_services/ble_bas_c;../sdk/components/ble/ble_services/ble_cscs;../sdk/components/ble/ble_services/ble_cts_c;../sdk/components/ble/ble_services/ble_dfu;../sdk/components/ble/ble_services/ble_dis;../sdk/components/ble/ble_services/ble_gls;../sdk/components/ble/ble_services/ble_hids;../sdk/components/ble/ble_services/ble_hrs;../sdk/components/ble/ble_services/ble_hrs_c;../sdk/components/ble/ble_services/ble_hts;../sdk/components/ble/ble_services/ble_ias;../sdk/components/ble/ble_services/ble_ias_c;../sdk/components/ble/ble_services/ble_lbs;../sdk/components/ble/ble_services/ble_lbs_c;../sdk/components/ble/ble_services/ble_lls;../sdk/components/ble/ble_services/ble_nus;../sdk/components/ble/ble_services/ble_nus_c;../sdk/components/ble/ble_services/ble_rscs;../sdk/components/ble/ble_services/ble_rscs_c;../sdk/components/ble/ble_services/ble_tps;../sdk/components/ble/common;../sdk/components/ble/nrf_ble_gatt;../sdk/components/ble/nrf_ble_qwr;../sdk/components/ble/peer_manager;../sdk/components/boards;../sdk/components/libraries/atomic;../sdk/components/libraries/atomic_fifo;../sdk/components/libraries/atomic_flags;../sdk/components/libraries/balloc;../sdk/components/libraries/bootloader/ble_dfu;../sdk/components/libraries/bsp;../sdk/components/libraries/button;../sdk/components/libraries/cli;../sdk/components/libraries/crc16;../sdk/components/libraries/crc32;../sdk/components/libraries/crypto;../sdk/components/libraries/csense;../sdk/components/libraries/csense_drv;../sdk/components/libraries/delay;../sdk/components/libraries/ecc;../sdk/components/libraries/experimental_section_vars;../sdk/components/libraries/experimental_task_manager;../sdk/components/libraries/fds;../sdk/components/libraries/fstorage;../sdk/components/libraries/gfx;../sdk/components/libraries/gpiote;../sdk/components/libraries/hardfault;../sdk/components/libraries/hardfault/nrf52;../sdk/components/libraries/hci;../sdk/components/libraries/led_softblink;../sdk/components/libraries/log;../sdk/components/libraries/log/src;../sdk/components/libraries/low_power_pwm;../sdk/components/libraries/mem_manager;../sdk/components/libraries/memobj;../sdk/components/libraries/mpu;../sdk/components/libraries/mutex;../sdk/components/libraries/pwm;../sdk/components/libraries/pwr_mgmt;../sdk/components/libraries/queue;../sdk/components/libraries/ringbuf;../sdk/components/libraries/scheduler;../sdk/components/libraries/sdcard;../sdk/components/libraries/sensorsim;../sdk/components/libraries/slip;../sdk/components/libraries/sortlist;../sdk/components/libraries/spi_mngr;../sdk/components/libraries/stack_guard;../sdk/components/libraries/strerror;../sdk/components/libraries/svc;../sdk/components/libraries/timer;../sdk/components/libraries/twi_mngr;../sdk/components/libraries/twi_sensor;../sdk/components/libraries/usbd;../sdk/components/libraries/usbd/class/audio;../sdk/components/libraries/usbd/class/cdc;../sdk/components/libraries/usbd/class/cdc/acm;../sdk/components/libraries/usbd/class/hid;../sdk/components/libraries/usbd/class/hid/generic;../sdk/components/libraries/usbd/class/hid/kbd;../sdk/components/libraries/usbd/class/hid/mouse;../sdk/components/libraries/usbd/class/msc;../sdk/components/libraries/util;../sdk/components/softdevice/common;../sdk/components/softdevice/s140/headers;../sdk/components/softdevice/s140/headers/nrf52;../sdk/components/toolchain/cmsis/include;../sdk/external/fprintf;../sdk/external/freertos/config;../sdk/external/freertos/portable/CMSIS/nrf52;../sdk/external/freertos/portable/GCC/nrf52;../sdk/external/freertos/source/include;../sdk/external/segger_rtt;../sdk/external/utf_converter;../sdk/integration/nrfx;../sdk/integration/nrfx/legacy;../sdk/modules/nrfx;../sdk/modules/nrfx/drivers/include;../sdk/modules/nrfx/hal;../sdk/modules/nrfx/mdk"
+      c_user_include_directories="../src;../src/boards;../src/logging;../src/ble;../src/library_wrappers;../config;../sdk/components;../sdk/components/ble/ble_advertising;../sdk/components/ble/ble_db_discovery;../sdk/components/ble/ble_dtm;../sdk/components/ble/ble_racp;../sdk/components/ble/ble_services/ble_ancs_c;../sdk/components/ble/ble_services/ble_ans_c;../sdk/components/ble/ble_services/ble_bas;../sdk/components/ble/ble_services/ble_bas_c;../sdk/components/ble/ble_services/ble_cscs;../sdk/components/ble/ble_services/ble_cts_c;../sdk/components/ble/ble_services/ble_dfu;../sdk/components/ble/ble_services/ble_dis;../sdk/components/ble/ble_services/ble_gls;../sdk/components/ble/ble_services/ble_hids;../sdk/components/ble/ble_services/ble_hrs;../sdk/components/ble/ble_services/ble_hrs_c;../sdk/components/ble/ble_services/ble_hts;../sdk/components/ble/ble_services/ble_ias;../sdk/components/ble/ble_services/ble_ias_c;../sdk/components/ble/ble_services/ble_lbs;../sdk/components/ble/ble_services/ble_lbs_c;../sdk/components/ble/ble_services/ble_lls;../sdk/components/ble/ble_services/ble_nus;../sdk/components/ble/ble_services/ble_nus_c;../sdk/components/ble/ble_services/ble_rscs;../sdk/components/ble/ble_services/ble_rscs_c;../sdk/components/ble/ble_services/ble_tps;../sdk/components/ble/common;../sdk/components/ble/nrf_ble_gatt;../sdk/components/ble/nrf_ble_gq;../sdk/components/ble/nrf_ble_qwr;../sdk/components/ble/nrf_ble_scan;../sdk/components/ble/peer_manager;../sdk/components/boards;../sdk/components/libraries/atomic;../sdk/components/libraries/atomic_fifo;../sdk/components/libraries/atomic_flags;../sdk/components/libraries/balloc;../sdk/components/libraries/bootloader/ble_dfu;../sdk/components/libraries/bsp;../sdk/components/libraries/button;../sdk/components/libraries/cli;../sdk/components/libraries/crc16;../sdk/components/libraries/crc32;../sdk/components/libraries/crypto;../sdk/components/libraries/csense;../sdk/components/libraries/csense_drv;../sdk/components/libraries/delay;../sdk/components/libraries/ecc;../sdk/components/libraries/experimental_section_vars;../sdk/components/libraries/experimental_task_manager;../sdk/components/libraries/fds;../sdk/components/libraries/fstorage;../sdk/components/libraries/gfx;../sdk/components/libraries/gpiote;../sdk/components/libraries/hardfault;../sdk/components/libraries/hardfault/nrf52;../sdk/components/libraries/hci;../sdk/components/libraries/led_softblink;../sdk/components/libraries/log;../sdk/components/libraries/log/src;../sdk/components/libraries/low_power_pwm;../sdk/components/libraries/mem_manager;../sdk/components/libraries/memobj;../sdk/components/libraries/mpu;../sdk/components/libraries/mutex;../sdk/components/libraries/pwm;../sdk/components/libraries/pwr_mgmt;../sdk/components/libraries/queue;../sdk/components/libraries/ringbuf;../sdk/components/libraries/scheduler;../sdk/components/libraries/sdcard;../sdk/components/libraries/sensorsim;../sdk/components/libraries/slip;../sdk/components/libraries/sortlist;../sdk/components/libraries/spi_mngr;../sdk/components/libraries/stack_guard;../sdk/components/libraries/strerror;../sdk/components/libraries/svc;../sdk/components/libraries/timer;../sdk/components/libraries/twi_mngr;../sdk/components/libraries/twi_sensor;../sdk/components/libraries/usbd;../sdk/components/libraries/usbd/class/audio;../sdk/components/libraries/usbd/class/cdc;../sdk/components/libraries/usbd/class/cdc/acm;../sdk/components/libraries/usbd/class/hid;../sdk/components/libraries/usbd/class/hid/generic;../sdk/components/libraries/usbd/class/hid/kbd;../sdk/components/libraries/usbd/class/hid/mouse;../sdk/components/libraries/usbd/class/msc;../sdk/components/libraries/util;../sdk/components/softdevice/common;../sdk/components/softdevice/s140/headers;../sdk/components/softdevice/s140/headers/nrf52;../sdk/components/toolchain/cmsis/include;../sdk/external/fprintf;../sdk/external/freertos/config;../sdk/external/freertos/portable/CMSIS/nrf52;../sdk/external/freertos/portable/GCC/nrf52;../sdk/external/freertos/source/include;../sdk/external/segger_rtt;../sdk/external/utf_converter;../sdk/integration/nrfx;../sdk/integration/nrfx/legacy;../sdk/modules/nrfx;../sdk/modules/nrfx/drivers/include;../sdk/modules/nrfx/hal;../sdk/modules/nrfx/mdk"
       cpp_only_additional_options="-Wno-register"
       debug_additional_load_file="../sdk/components/softdevice/s140/hex/s140_nrf52_7.0.1_softdevice.hex"
       debug_register_definition_file="../sdk/modules/nrfx/mdk/nrf52840.svd"
@@ -46,7 +46,7 @@
       <file file_name="../sdk/components/libraries/log/src/nrf_log_default_backends.c" />
       <file file_name="../sdk/components/libraries/log/src/nrf_log_frontend.c" />
       <file file_name="../sdk/components/libraries/log/src/nrf_log_str_formatter.c" />
-      <folder Name="Headers">
+      <folder Name="headers">
         <file file_name="../sdk/components/libraries/log/nrf_log.h" />
         <file file_name="../sdk/components/libraries/log/nrf_log_backend_flash.h" />
         <file file_name="../sdk/components/libraries/log/nrf_log_backend_interface.h" />
@@ -144,6 +144,11 @@
         <file file_name="../sdk/components/libraries/util/app_util_platform.h" />
         <file file_name="../sdk/components/libraries/util/nrf_assert.c" />
         <file file_name="../sdk/components/libraries/util/nrf_assert.h" />
+        <file file_name="../sdk/components/libraries/util/app_util.h" />
+      </folder>
+      <folder Name="queue">
+        <file file_name="../sdk/components/libraries/queue/nrf_queue.c" />
+        <file file_name="../sdk/components/libraries/queue/nrf_queue.h" />
       </folder>
     </folder>
     <folder Name="None">
@@ -247,11 +252,23 @@
       <folder Name="BLE">
         <file file_name="../src/ble/ble_peripheral.cpp" />
         <file file_name="../src/ble/ble_peripheral.hpp" />
-        <file file_name="../src/ble/ble_esk8.cpp" />
-        <file file_name="../src/ble/ble_esk8.hpp" />
+        <file file_name="../src/ble/ble_esk8_server.cpp" />
+        <file file_name="../src/ble/ble_esk8_server.hpp" />
+        <file file_name="../src/ble/ble_central.cpp" />
+        <file file_name="../src/ble/ble_central.hpp" />
+        <file file_name="../src/ble/ble_remote.cpp" />
+        <file file_name="../src/ble/ble_remote.hpp" />
+        <file file_name="../src/ble/ble_common.cpp" />
+        <file file_name="../src/ble/ble_common.hpp" />
       </folder>
       <file file_name="../src/util.cpp" />
       <file file_name="../src/util.hpp" />
+      <folder Name="library_wrappers">
+        <folder Name="FDS">
+          <file file_name="../src/library_wrappers/esk8_fds.cpp" />
+          <file file_name="../src/library_wrappers/esk8_fds.hpp" />
+        </folder>
+      </folder>
     </folder>
     <folder Name="Config">
       <file file_name="../config/sdk_config.h" />
@@ -320,6 +337,18 @@
         <file file_name="../sdk/components/ble/nrf_ble_qwr/nrf_ble_qwr.c" />
         <file file_name="../sdk/components/ble/nrf_ble_qwr/nrf_ble_qwr.h" />
       </folder>
+      <folder Name="ble_db_discovery">
+        <file file_name="../sdk/components/ble/ble_db_discovery/ble_db_discovery.c" />
+        <file file_name="../sdk/components/ble/ble_db_discovery/ble_db_discovery.h" />
+      </folder>
+      <folder Name="nrf_ble_gq">
+        <file file_name="../sdk/components/ble/nrf_ble_gq/nrf_ble_gq.c" />
+        <file file_name="../sdk/components/ble/nrf_ble_gq/nrf_ble_gq.h" />
+      </folder>
+      <folder Name="nrf_ble_scan">
+        <file file_name="../sdk/components/ble/nrf_ble_scan/nrf_ble_scan.c" />
+        <file file_name="../sdk/components/ble/nrf_ble_scan/nrf_ble_scan.h" />
+      </folder>
     </folder>
     <folder Name="UTF8/UTF16 converter">
       <file file_name="../sdk/external/utf_converter/utf.c" />
@@ -342,6 +371,26 @@
       <file file_name="../sdk/components/softdevice/common/nrf_sdh_freertos.h" />
       <file file_name="../sdk/components/softdevice/common/nrf_sdh_soc.c" />
       <file file_name="../sdk/components/softdevice/common/nrf_sdh_soc.h" />
+      <folder Name="headers">
+        <file file_name="../sdk/components/softdevice/s140/headers/ble.h" />
+        <file file_name="../sdk/components/softdevice/s140/headers/ble_err.h" />
+        <file file_name="../sdk/components/softdevice/s140/headers/ble_gap.h" />
+        <file file_name="../sdk/components/softdevice/s140/headers/ble_gatt.h" />
+        <file file_name="../sdk/components/softdevice/s140/headers/ble_gattc.h" />
+        <file file_name="../sdk/components/softdevice/s140/headers/ble_gatts.h" />
+        <file file_name="../sdk/components/softdevice/s140/headers/ble_hci.h" />
+        <file file_name="../sdk/components/softdevice/s140/headers/ble_l2cap.h" />
+        <file file_name="../sdk/components/softdevice/s140/headers/ble_ranges.h" />
+        <file file_name="../sdk/components/softdevice/s140/headers/ble_types.h" />
+        <file file_name="../sdk/components/softdevice/s140/headers/nrf_error.h" />
+        <file file_name="../sdk/components/softdevice/s140/headers/nrf_error_sdm.h" />
+        <file file_name="../sdk/components/softdevice/s140/headers/nrf_error_soc.h" />
+        <file file_name="../sdk/components/softdevice/s140/headers/nrf_nvic.h" />
+        <file file_name="../sdk/components/softdevice/s140/headers/nrf_sd_def.h" />
+        <file file_name="../sdk/components/softdevice/s140/headers/nrf_sdm.h" />
+        <file file_name="../sdk/components/softdevice/s140/headers/nrf_soc.h" />
+        <file file_name="../sdk/components/softdevice/s140/headers/nrf_svc.h" />
+      </folder>
     </folder>
   </project>
   <configuration

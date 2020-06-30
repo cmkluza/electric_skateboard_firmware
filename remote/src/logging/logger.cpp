@@ -16,54 +16,53 @@
 #include <nrf_log_ctrl.h>
 #include <nrf_log_default_backends.h>
 
+namespace logger {
+
 #if NRF_LOG_ENABLED
 
-static TaskHandle_t m_logger_thread;
+static TaskHandle_t logger_thandle;
 
 /**
  * Thread for handling the logger.
  *
  * This thread is responsible for processing log entries if logs are deferred.
  * Thread flushes all log entries and suspends. It is resumed by idle task hook.
- *
- * @param[in] arg Pointer used for passing some arbitrary information (context) from the
- *                osThreadCreate() call to the thread.
  */
-static void logger_thread(void * arg)
+static void logger_thread(void *arg)
 {
     UNUSED_PARAMETER(arg);
 
-    while (1)
-    {
+    while (true) {
         NRF_LOG_FLUSH();
-
-        vTaskSuspend(NULL); // Suspend myself
+        vTaskSuspend(NULL);
     }
 }
 
-void Logger::init()
+void init()
 {
-    ret_code_t err_code = NRF_LOG_INIT(NULL);
-    APP_ERROR_CHECK(err_code);
+    // TODO CMK 06/19/20: timestamp function
+    APP_ERROR_CHECK(NRF_LOG_INIT(NULL));
 
     NRF_LOG_DEFAULT_BACKENDS_INIT();
     
-    if (pdPASS != xTaskCreate(logger_thread, "LOGGER", 256, NULL, 1, &m_logger_thread))
+    // TODO CMK 06/18/20: logger flash backend
+    
+    if (pdPASS != xTaskCreate(logger_thread, "Logger", 256, NULL, 1, &logger_thandle))
     {
         APP_ERROR_HANDLER(NRF_ERROR_NO_MEM);
     }
-
-    // TODO CMK: logger flash backend
 }
 
-void Logger::idle()
+void idle()
 {
-     vTaskResume(m_logger_thread);
+     vTaskResume(logger_thandle);
 }
- 
+
 #else // !NRF_LOG_ENABLED
 
-void Logger::init() {}
-void Logger::idle() {}
+void init() {}
+void idle() {}
 
 #endif // NRF_LOG_ENABLED
+
+} // namespace logger

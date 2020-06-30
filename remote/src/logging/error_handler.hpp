@@ -8,7 +8,7 @@
 #ifndef ESK8_ERROR_HANDLER_H
 #define ESK8_ERROR_HANDLER_H
 
-namespace ErrorHandler {
+namespace error_handler {
     
 }
 
