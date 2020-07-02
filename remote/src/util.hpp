@@ -7,7 +7,9 @@
 
 #pragma once
 
-#include <nordic_common.h>
+#include "app_config.h"
+
+#include <ble_types.h>
 
 /**
  * Macros for printing 6-byte MAC addresses.
@@ -33,6 +35,12 @@
 #endif
 
 namespace util {
+    
+    /**< Length of a 16-bit UUID. */
+    static inline constexpr uint32_t UUID16_LEN = { 2 };
+        
+    /**< Length of a 128-bit UUID. */
+    static inline constexpr uint32_t UUID128_LEN = { 16 };
 
     /** 
      * Function for initializing the clock.
@@ -50,5 +58,21 @@ namespace util {
      * @note This function will not return.
      */
     void enter_sleep_mode();
+    
+    /**
+     * Logs a 128-bit UUID.
+     *
+     * @param[in] uuid pointer to the UUID to be logged.
+     * @param[in] log_prefix a string that will be prepended to the log.
+     */
+    void log_uuid(const ble_uuid128_t *uuid, const char *log_prefix);
+    
+    /**
+     * Logs a piece of advertisement data.
+     *
+     * @param[in] data pointer to the advertisement data.
+     * @param[in] log_prefix a string that will be prepended to each log.
+     */
+    void log_ble_data(const ble_data_t *data, const char *log_prefix);
 
 } // namespace util

@@ -117,6 +117,7 @@ void init()
 
 static void init_paired_addr()
 {
+#if 0 // TODO CMK 07/01/20: init paired addr w/ FDS
     fds_record_desc_t desc = {};
     
     if (esk8_fds::record_is_present(BLE_COMMON_FDS_ADDR_FILE_ID, 
@@ -130,12 +131,18 @@ static void init_paired_addr()
     
     /* Either record was missing or corrupted, start anew. */
     memset(&g_paired_addr, 0, sizeof(g_paired_addr));
+#endif
 }
 
 static void scan_event_handler(scan_evt_t const *p_scan_evt)
 {
     switch (p_scan_evt->scan_evt_id) {
         case NRF_BLE_SCAN_EVT_FILTER_MATCH:
+            const ble_gap_evt_adv_report_t *adv_report = p_scan_evt->params.filter_match.p_adv_report;
+            NRF_LOG_INFO("SCANNED: " MAC_FMT, 
+                         MAC_ARGS(adv_report->peer_addr.addr));
+            util::log_ble_data(&adv_report->data,
+                               "         ");
             break;
 
         case NRF_BLE_SCAN_EVT_WHITELIST_REQUEST: /* Not using whitelists */
@@ -161,8 +168,8 @@ static void scan_event_handler(scan_evt_t const *p_scan_evt)
 
         case NRF_BLE_SCAN_EVT_CONNECTED:
             g_paired_addr = p_scan_evt->params.connected.p_connected->peer_addr;
-            NRF_LOG_INFO("Connected - handle 0x%04X", p_scan_evt->params.connected.conn_handle);
-            NRF_LOG_INFO("            " MAC_FMT, MAC_ARGS(g_paired_addr.addr)); 
+            NRF_LOG_INFO("CONNECTED: Handle 0x%04X", p_scan_evt->params.connected.conn_handle);
+            NRF_LOG_INFO("           " MAC_FMT, MAC_ARGS(g_paired_addr.addr));
             // TODO CMK 06/29/20: more connection handling?
             break;
     }
