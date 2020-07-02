@@ -78,11 +78,12 @@ ret_code_t init(const ble_common::Config &config)
 
 void set_scan_filter(uint8_t filter_mode)
 {
+    // TODO CMK 07/01/20: scan filtering
     ASSERT(g_scan != nullptr);
-    err_code = nrf_ble_scan_filters_enable(g_scan, filter_mode, true);
+    auto err_code = nrf_ble_scan_filters_enable(g_scan, filter_mode, true);
     APP_ERROR_CHECK(err_code);
 
-    err_code = nrf_ble_scan_filter_set(g_scan, SCAN_NAME_FILTER, m_target_periph_name);
+    //err_code = nrf_ble_scan_filter_set(g_scan, SCAN_NAME_FILTER, m_target_periph_name);
 }
 
 void begin_scanning()
