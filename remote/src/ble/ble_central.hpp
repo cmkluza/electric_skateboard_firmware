@@ -13,12 +13,13 @@
 #pragma once
  
 #include "ble_common.hpp"
- 
+
+#include <ble_gap.h>
+#include <ble_types.h>
 #include <sdk_errors.h>
  
 namespace ble_central {
 
-     
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Functions
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,7 +36,18 @@ namespace ble_central {
     
     /**
      * Sets the filter for the scanning module.
+     *
+     * @param[in] addr reference to the BLE address to filter for.
      */
+    void set_addr_scan_filter(const ble_gap_addr_t &addr);
+    
+    /**
+     * Sets the filter for the scanning module.
+     *
+     * @param[in] uuid reference to the BLE UUID to filter for.
+     * @param[in] appearance the BLE appearance to filter for.
+     */
+    void set_uuid_appearance_scan_filter(const ble_uuid_t &uuid, uint16_t appearance);
     
     /**
      * Begins scanning for BLE devices.

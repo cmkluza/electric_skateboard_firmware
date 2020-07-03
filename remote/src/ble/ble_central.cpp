@@ -76,14 +76,29 @@ ret_code_t init(const ble_common::Config &config)
     db_discovery_init();
 }
 
-void set_scan_filter(uint8_t filter_mode)
+void set_addr_scan_filter(const ble_gap_addr_t &addr)
 {
-    // TODO CMK 07/01/20: scan filtering
     ASSERT(g_scan != nullptr);
-    auto err_code = nrf_ble_scan_filters_enable(g_scan, filter_mode, true);
-    APP_ERROR_CHECK(err_code);
+    APP_ERROR_CHECK(nrf_ble_scan_filters_disable(g_scan));
+    APP_ERROR_CHECK(nrf_ble_scan_all_filter_remove(g_scan));
+    APP_ERROR_CHECK(nrf_ble_scan_filters_enable(g_scan, NRF_BLE_SCAN_ADDR_FILTER, true));
 
-    //err_code = nrf_ble_scan_filter_set(g_scan, SCAN_NAME_FILTER, m_target_periph_name);
+    /* SCAN_ADDR_FILTER takes a (uint8_t *) */
+    nrf_ble_scan_filter_set(g_scan, SCAN_ADDR_FILTER, addr.addr);
+}
+
+void set_uuid_appearance_scan_filter(const ble_uuid_t &uuid, uint16_t appearance)
+{
+    ASSERT(g_scan != nullptr);
+    APP_ERROR_CHECK(nrf_ble_scan_filters_disable(g_scan));
+    APP_ERROR_CHECK(nrf_ble_scan_all_filter_remove(g_scan));
+    APP_ERROR_CHECK(nrf_ble_scan_filters_enable(g_scan, 
+                    (NRF_BLE_SCAN_UUID_FILTER | NRF_BLE_SCAN_APPEARANCE_FILTER), true));
+
+    /* SCAN_UUID_FILTER takes a (ble_uuid_t *) */
+    nrf_ble_scan_filter_set(g_scan, SCAN_UUID_FILTER, &uuid);
+    /* SCAN_APPEARANCE_FILTER takes a (uint16_t *) */
+    nrf_ble_scan_filter_set(g_scan, SCAN_APPEARANCE_FILTER, &appearance);
 }
 
 void begin_scanning()
