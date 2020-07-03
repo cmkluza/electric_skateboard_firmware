@@ -29,6 +29,8 @@ public:
                              BLE_ESK8_OBSERVER_PRIO, \
                              BLEEsk8Server::event_handler, &_name)
 
+    // TODO CMK 07/01/20: should probably move these definitions into a common header
+
     /**< Randomly generated 128-bit UUID base for custom electric 
          skateboard service:
          E44D8CF2-8112-44A6-B41C-73BA7EFA957C */
@@ -37,10 +39,13 @@ public:
                      0xA6, 0x44, 0x12, 0x81, 0xF2, 0x8C, 0x4D, 0xE4 } 
     };
     
-    /**< Randomly generated 16-bit UUID for custom electric skateboard service */
+    /**< Randomly generated 16-bit UUID for custom electric skateboard service. */
     static inline constexpr uint16_t UUID_SERVICE = { 0xDC10 };
-    /**< 16-bit UUID for Hall effect sensor data */    
+    /**< 16-bit UUID for Hall effect sensor data. */    
     static inline constexpr uint16_t UUID_SENSOR_CHAR = { 0xDC11 };
+    /**< BLE appearance for the remote. */
+    // TODO CMK 07/01/20: see if there's regulations/considerations for custom appearances
+    static inline constexpr uint16_t APPEARANCE = { 0x1234 };
             
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Functions
@@ -67,5 +72,10 @@ public:
      * @param TODO
      */
     void update_sensor_value(uint16_t conn_handle, uint8_t new_value);
-
+    
+    /**
+     * Gets the BLE UUID type assigned by the Nordic BLE stack.
+     */
+    uint8_t uuid_type() { return _uuid_type; }
+    
 }; // class BLEEsk8Server
