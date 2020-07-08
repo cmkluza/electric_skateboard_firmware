@@ -1,11 +1,11 @@
 /*
- * ble_esk8_server.cpp - Server for custom electric skateboard BLE service.
+ * ble_es_server.cpp - Server for custom electric skateboard BLE service.
  *
  * Copyright (c) 2020 Cameron Kluza
  * Distributed under the MIT license (see LICENSE or https://opensource.org/licenses/MIT)
  */
  
-#include "ble_esk8_server.hpp"
+#include "ble_es_server.hpp"
 
 #include <app_error.h>
 #include <ble.h>
@@ -13,8 +13,7 @@
 #include <ble_srv_common.h>
 #include <ble_types.h>
 
-
-void BLEEsk8Server::init()
+void BLEESServer::init()
 {
     /* Add vendor specific 128-bit UUID */
     ble_uuid128_t base_uuid = UUID_BASE;
@@ -76,12 +75,12 @@ void BLEEsk8Server::init()
     APP_ERROR_CHECK(characteristic_add(_service_handle, &add_char_params, &_sensor_char_handles));
 }
 
-void BLEEsk8Server::event_handler(ble_evt_t const *p_ble_evt, void *p_context)
+void BLEESServer::event_handler(ble_evt_t const *p_ble_evt, void *p_context)
 {
     // TODO CMK 06/22/20: implement BLE event handler
 }
 
-void BLEEsk8Server::update_sensor_value(uint16_t conn_handle, uint8_t new_value)
+void BLEESServer::update_sensor_value(uint16_t conn_handle, uint8_t new_value)
 {
     uint16_t len = { sizeof(new_value) };
     

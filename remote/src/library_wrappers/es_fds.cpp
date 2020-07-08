@@ -1,5 +1,5 @@
 /*
- * esk8_fds.cpp - Functions to deal with the flash data storage library.
+ * es_fds.cpp - Functions to deal with the flash data storage library.
  *
  * Performs initialization of FDS and handles FDS events.
  *
@@ -7,13 +7,13 @@
  * Distributed under the MIT license (see LICENSE or https://opensource.org/licenses/MIT)
  */
 
-#include "esk8_fds.hpp"
+#include "es_fds.hpp"
 
 #include <fds.h>
 #include <nrf_log.h>
 #include <nrf_strerror.h>
 
-namespace esk8_fds {
+namespace es_fds {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Internal Data
@@ -130,4 +130,4 @@ static void event_handler(fds_evt_t const *p_evt)
     }
 }
 
-} // namespace esk8_fds
+} // namespace es_fds

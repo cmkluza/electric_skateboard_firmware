@@ -1,12 +1,11 @@
 /*
- * ble_esk8_client.hpp - Client for custom electric skateboard BLE service.
+ * ble_es_client.hpp - Client for custom electric skateboard BLE service.
  *
  * Copyright (c) 2020 Cameron Kluza
  * Distributed under the MIT license (see LICENSE or https://opensource.org/licenses/MIT)
  */
 
-#ifndef ESK8_BLE_ESK8_CLIENT_H
-#define ESK8_BLE_ESK8_CLIENT_H
+#pragma once
 
 #include <nrf_sdh_ble.h>
 #include <sdk_errors.h>
@@ -15,9 +14,9 @@
 
 /**< Callback for when sensor data comes in */
 // TODO CMK 06/22/20: verify data type for sensor data
-typedef void (*ble_esk8_sensor_callback)(uint8_t data);
+typedef void (*ble_es_sensor_callback)(uint8_t data);
 
-class BLEEsk8Client {
+class BLEESClient {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Types, Constants, Definitions
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -25,15 +24,16 @@ private:
     uint16_t service_handle;                        /**< Handle for this service (provided by BLE stack) */
     ble_gatts_char_handles_t sensor_char_handles;   /**< Handles for the sensor characteristic */
     uint8_t uuid_type;                              /**< UUID for this service (provided by BLE stack) */
-    ble_esk8_sensor_callback callback;              /**< Callback for when new sensor data comes in */
+    ble_es_sensor_callback callback;              /**< Callback for when new sensor data comes in */
 
 public:
     /** Macro to define a BLE event observer */
-    #define BLE_ESK8_CLIENT_DEF(_name) \
-    static BLEEsk8Client _name; \
+    // TODO CMK 07/08/20: replace observer priority
+    #define BLE_ES_CLIENT_DEF(_name) \
+    static BLEESClient _name; \
     NRF_SDH_BLE_OBSERVER(_name ## _obs, \
                          BLE_LBS_BLE_OBSERVER_PRIO, \
-                         BLEEsk8Client::event_handler, &_name)
+                         BLEESClient::event_handler, &_name)
 
     /**< Randomly generated 128-bit UUID base for custom electric
          skateboard service:
@@ -55,13 +55,11 @@ public:
     /**
      * Initializes this service.
      */
-    ret_code_t init();
+    void init();
 
     /**
      * BLE event handler for this service.
      */
     static void event_handler(ble_evt_t const *p_ble_evt, void *p_context);
 
-}; // class BLEEsk8Client
-
-#endif // ESK8_BLE_ESK8_CLIENT_H
+}; // class BLEESClient

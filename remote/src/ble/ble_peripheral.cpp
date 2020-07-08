@@ -47,7 +47,7 @@ static uint16_t g_conn_handle { BLE_CONN_HANDLE_INVALID };
 static ble_uuid_t g_adv_uuids[] =
 {
     /* TODO CMK 06/21/20: Fill in type dynamically during init */
-    //{BLEEsk8Server::UUID_SERVICE, BLE_UUID_TYPE_UNKNOWN},
+    //{BLEESServer::UUID_SERVICE, BLE_UUID_TYPE_UNKNOWN},
     {BLE_UUID_DEVICE_INFORMATION_SERVICE, BLE_UUID_TYPE_BLE}
 };
 

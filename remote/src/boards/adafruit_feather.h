@@ -5,8 +5,7 @@
  * Distributed under the MIT license (see LICENSE or https://opensource.org/licenses/MIT)
  */
 
-#ifndef ESK8_ADAFRUIT_FEATHER_H
-#define ESK8_ADAFRUIT_FEATHER_H
+#pragma once
 
 #include "boards_gpio.h"
 
@@ -97,5 +96,3 @@
 #define FEATHER_AREF_PIN        _nRF_GPIO_PIN_MAP(0, 31)
 #define NEOPIXEL_DI_PIN         _nRF_GPIO_PIN_MAP(0, 16)
 #define FEATHER_VDIV_PIN        _nRF_GPIO_PIN_MAP(0, 29) // Vbat divider
-
-#endif // ESK8_ADAFRUIT_FEATHER_H

@@ -1,5 +1,5 @@
 /*
- * esk8_fds.hpp - Functions to deal with the flash data storage library.
+ * es_fds.hpp - Functions to deal with the flash data storage library.
  *
  * Performs initialization of FDS and handles FDS events.
  *
@@ -14,7 +14,7 @@
 
 #include <cstdint>
 
-namespace esk8_fds {
+namespace es_fds {
     
     /**
      * Initializes the FDS library.
@@ -48,4 +48,4 @@ namespace esk8_fds {
      */
     void idle();
     
-} // namespace esk8_fds
+} // namespace es_fds

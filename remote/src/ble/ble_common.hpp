@@ -9,8 +9,8 @@
 
 #pragma once
 
-#include "ble_esk8_client.hpp"
-#include "ble_esk8_server.hpp"
+#include "ble_es_client.hpp"
+#include "ble_es_server.hpp"
 #include "util.hpp"
 
 #include <ble_advertising.h>

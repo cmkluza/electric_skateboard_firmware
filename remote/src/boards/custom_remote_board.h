@@ -5,8 +5,7 @@
  * Distributed under the MIT license (see LICENSE or https://opensource.org/licenses/MIT)
  */
 
-#ifndef ESK8_CUSTOM_REMOTE_BOARD_H
-#define ESK8_CUSTOM_REMOTE_BOARD_H
+#pragma once
 
 // TODO CMK: go through these all again once board is ready
 
@@ -67,5 +66,3 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-
-#endif // ESK8_CUSTOM_REMOTE_BOARD_H

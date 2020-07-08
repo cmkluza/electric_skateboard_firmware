@@ -252,21 +252,23 @@
       <folder Name="BLE">
         <file file_name="../src/ble/ble_peripheral.cpp" />
         <file file_name="../src/ble/ble_peripheral.hpp" />
-        <file file_name="../src/ble/ble_esk8_server.cpp" />
-        <file file_name="../src/ble/ble_esk8_server.hpp" />
         <file file_name="../src/ble/ble_central.cpp" />
         <file file_name="../src/ble/ble_central.hpp" />
         <file file_name="../src/ble/ble_remote.cpp" />
         <file file_name="../src/ble/ble_remote.hpp" />
         <file file_name="../src/ble/ble_common.cpp" />
         <file file_name="../src/ble/ble_common.hpp" />
+        <file file_name="../src/ble/ble_es_client.cpp" />
+        <file file_name="../src/ble/ble_es_client.hpp" />
+        <file file_name="../src/ble/ble_es_server.cpp" />
+        <file file_name="../src/ble/ble_es_server.hpp" />
       </folder>
       <file file_name="../src/util.cpp" />
       <file file_name="../src/util.hpp" />
       <folder Name="library_wrappers">
         <folder Name="FDS">
-          <file file_name="../src/library_wrappers/esk8_fds.cpp" />
-          <file file_name="../src/library_wrappers/esk8_fds.hpp" />
+          <file file_name="../src/library_wrappers/es_fds.cpp" />
+          <file file_name="../src/library_wrappers/es_fds.hpp" />
         </folder>
       </folder>
     </folder>

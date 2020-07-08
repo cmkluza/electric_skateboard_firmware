@@ -1,5 +1,5 @@
 /*
- * ble_esk8_server.hpp - Server for custom electric skateboard BLE service.
+ * ble_es_server.hpp - Server for custom electric skateboard BLE service.
  *
  * Copyright (c) 2020 Cameron Kluza
  * Distributed under the MIT license (see LICENSE or https://opensource.org/licenses/MIT)
@@ -12,7 +12,7 @@
 #include <nrf_sdh_ble.h>
 #include <sdk_errors.h>
 
-class BLEEsk8Server {
+class BLEESServer {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Types, Constants, Definitions
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -23,11 +23,11 @@ private:
     
 public:
     /**< Macro to define a BLE event observer */
-    #define BLE_ESK8_SERVER_DEF(_name) \
-        static BLEEsk8Server _name; \
+    #define BLE_ES_SERVER_DEF(_name) \
+        static BLEESServer _name; \
         NRF_SDH_BLE_OBSERVER(_name ## _obs, \
-                             BLE_ESK8_OBSERVER_PRIO, \
-                             BLEEsk8Server::event_handler, &_name)
+                             BLE_ES_OBSERVER_PRIO, \
+                             BLEESServer::event_handler, &_name)
 
     // TODO CMK 07/01/20: should probably move these definitions into a common header
 
@@ -61,7 +61,7 @@ public:
      * BLE event handler for this service.
      *
      * @param[in] p_ble_evt pointer to the event
-     * @param[in] p_context pointer to self (passed when defined by BLE_ESK8_CLIENT_DEF)
+     * @param[in] p_context pointer to self (passed when defined by BLE_ES_SERVER_DEF)
      */
     static void event_handler(ble_evt_t const *p_ble_evt, void *p_context);
     
@@ -78,4 +78,4 @@ public:
      */
     uint8_t uuid_type() { return _uuid_type; }
     
-}; // class BLEEsk8Server
+}; // class BLEESServer

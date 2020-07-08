@@ -14,8 +14,8 @@
 #include "ble_remote.hpp"
 #include "ble_central.hpp"
 #include "ble_common.hpp"
-#include "ble_esk8_server.hpp"
-#include "esk8_fds.hpp"
+#include "ble_es_server.hpp"
+#include "es_fds.hpp"
 #include "util.hpp"
 
 #include "app_config.h"
@@ -55,13 +55,13 @@ NRF_BLE_GQ_DEF(g_gatt_queue,
 BLE_DB_DISCOVERY_DEF(g_discovery);
 
 /**< Custom electric skateboard server instance. */
-BLE_ESK8_SERVER_DEF(g_esk8);
+BLE_ES_SERVER_DEF(g_es_server);
 
 /**< List of BLE UUIDs to be advertised. */
 static ble_uuid_t g_adv_uuids[] =
 {
     /* TODO CMK 06/21/20: Fill in type dynamically during init */
-    {BLEEsk8Server::UUID_SERVICE, BLE_UUID_TYPE_UNKNOWN},
+    {BLEESServer::UUID_SERVICE, BLE_UUID_TYPE_UNKNOWN},
     {BLE_UUID_DEVICE_INFORMATION_SERVICE, BLE_UUID_TYPE_BLE}
 };
 BLE_ADVERTISING_DEF(g_advertising);
@@ -72,9 +72,6 @@ static ble_common::Config g_config = {};
 
 /**< The BLE address of the paired receiver. Set to 0 when no receiver is paired. */
 static ble_gap_addr_t g_paired_addr;
-
-/**< The server to send remote values to the receiver. */
-static BLEEsk8Server g_server;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Internal Prototypes
@@ -108,14 +105,14 @@ void init()
     
     init_paired_addr();
     
-    g_server.init();
+    g_es_server.init();
     
     ble_uuid_t uuid = {
-        .uuid = BLEEsk8Server::UUID_SERVICE,
-        .type = g_server.uuid_type(),
+        .uuid = BLEESServer::UUID_SERVICE,
+        .type = g_es_server.uuid_type(),
     };
     // TODO CMK  07/01/20: choose what kind of scanning based on if g_paired_addr is found
-    ble_central::set_uuid_appearance_scan_filter(uuid, BLEEsk8Server::APPEARANCE);
+    ble_central::set_uuid_appearance_scan_filter(uuid, BLEESServer::APPEARANCE);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -127,9 +124,9 @@ static void init_paired_addr()
 #if 0 // TODO CMK 07/01/20: init paired addr w/ FDS
     fds_record_desc_t desc = {};
     
-    if (esk8_fds::record_is_present(BLE_COMMON_FDS_ADDR_FILE_ID, 
+    if (es_fds::record_is_present(BLE_COMMON_FDS_ADDR_FILE_ID, 
                                     BLE_COMMON_FDS_ADDR_RECORD_KEY, &desc)) {
-        if (esk8_fds::read_record(&desc, reinterpret_cast<uint8_t *>(&g_paired_addr), 
+        if (es_fds::read_record(&desc, reinterpret_cast<uint8_t *>(&g_paired_addr), 
                 sizeof(g_paired_addr)) == NRF_SUCCESS) {
             return;
         }

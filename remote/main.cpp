@@ -9,7 +9,7 @@
 
 #include "ble_central.hpp"
 #include "ble_remote.hpp"
-#include "esk8_fds.hpp"
+#include "es_fds.hpp"
 #include "logger.hpp"
 #include "util.hpp"
 
@@ -42,8 +42,7 @@
  *  - Features could include getting date/time from phone, getting GPS/directions, firmware udpates,
  *    etc.
  */
-
-// TODO CMK 07/03/20: rename everything, remove "esk8"
+ 
 // TODO CMK 07/03/20: implement a "delete_bonds" type function
 // TODO CMK 07/03/20: make proper electric skateboard BLE service/client
 // TODO CMK 07/03/20: sensor simulator
@@ -64,7 +63,7 @@ int main()
 
     /* Library and module initialization */
     // TODO CMK 07/03/20: FDS
-    //esk8_fds::init();
+    //es_fds::init();
     
     /* BLE initialization */
     ble_remote::init();

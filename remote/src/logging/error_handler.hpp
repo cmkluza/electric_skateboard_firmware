@@ -5,11 +5,8 @@
  * Distributed under the MIT license (see LICENSE or https://opensource.org/licenses/MIT)
  */
 
-#ifndef ESK8_ERROR_HANDLER_H
-#define ESK8_ERROR_HANDLER_H
+#pragma once
 
 namespace error_handler {
     
 }
-
-#endif // ESK8_ERROR_HANDLER_H

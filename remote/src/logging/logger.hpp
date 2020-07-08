@@ -5,8 +5,7 @@
  * Distributed under the MIT license (see LICENSE or https://opensource.org/licenses/MIT)
  */
 
-#ifndef ESK8_LOGGER_H
-#define ESK8_LOGGER_H
+#pragma once
 
 #include <sdk_errors.h>
 
@@ -21,5 +20,3 @@ namespace logger {
      */
     void idle();
 }
-
-#endif // ESK8_LOGGER_H
