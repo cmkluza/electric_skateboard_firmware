@@ -36,13 +36,9 @@ namespace ble_remote {
 // Internal Data
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/** Context for the common BLE event handler. Used to tell ble peripheral/central if common init is
-    done. */
-static bool g_ble_observer_is_initialized { false };
-
 /** Register common BLE event handler. */
 NRF_SDH_BLE_OBSERVER(g_ble_observer, BLE_COMMON_OBSERVER_PRIO, 
-                     ble_common::event_handler, &g_ble_observer_is_initialized);
+                     ble_common::event_handler, nullptr);
 
 /**< nRF BLE GATT instance. */
 NRF_BLE_GATT_DEF(g_gatt);
@@ -71,8 +67,9 @@ static ble_uuid_t g_adv_uuids[] =
 BLE_ADVERTISING_DEF(g_advertising);
 
 /**< The BLE initialization context. */
+// TODO CMK 07/05/20: does this need to be global?
 static ble_common::Config g_config = {};
-    
+
 /**< The BLE address of the paired receiver. Set to 0 when no receiver is paired. */
 static ble_gap_addr_t g_paired_addr;
 
@@ -112,14 +109,13 @@ void init()
     init_paired_addr();
     
     g_server.init();
+    
     ble_uuid_t uuid = {
         .uuid = BLEEsk8Server::UUID_SERVICE,
         .type = g_server.uuid_type(),
     };
     // TODO CMK  07/01/20: choose what kind of scanning based on if g_paired_addr is found
     ble_central::set_uuid_appearance_scan_filter(uuid, BLEEsk8Server::APPEARANCE);
-    
-    ble_central::begin_scanning();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -138,7 +134,6 @@ static void init_paired_addr()
             return;
         }
     }
-    NRF_BLE_SCAN_NAME_FILTER
     
     /* Either record was missing or corrupted, start anew. */
     memset(&g_paired_addr, 0, sizeof(g_paired_addr));
@@ -150,7 +145,7 @@ static void scan_event_handler(scan_evt_t const *p_scan_evt)
     switch (p_scan_evt->scan_evt_id) {
         case NRF_BLE_SCAN_EVT_FILTER_MATCH:
             {
-                const ble_gap_evt_adv_report_t *adv_report = p_scan_evt->params.filter_match.p_adv_report;
+                auto *adv_report = p_scan_evt->params.filter_match.p_adv_report;
                 NRF_LOG_INFO("SCANNED: " MAC_FMT, 
                              MAC_ARGS(adv_report->peer_addr.addr));
                 util::log_ble_data(&adv_report->data,

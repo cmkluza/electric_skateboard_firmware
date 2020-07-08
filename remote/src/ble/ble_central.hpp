@@ -28,11 +28,8 @@ namespace ble_central {
      * Initializes BLE central modules.
      *
      * TODO CMK 06/24/20: update with specifics
-     *
-     * @return NRF_SUCCESS if successfully initialized, otherwise an error code indicating 
-     *         an unrecoverable issue occurred.
      */
-    ret_code_t init(const ble_common::Config &config);
+    void init(const ble_common::Config &config);
     
     /**
      * Sets the filter for the scanning module.

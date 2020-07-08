@@ -63,11 +63,8 @@ SUPPRESS_WARNING_END()
      * Initializes common BLE stack and modules.
      *
      * TODO CMK 06/24/20: specifics
-     *
-     * @return NRF_SUCCESS if successfully initialized, otherwise an error code indicating 
-     *         an unrecoverable issue occurred.
      */
-    ret_code_t init(const Config &config);
+    void init(const Config &config);
     
     /**
      * Callback to handle BLE events.

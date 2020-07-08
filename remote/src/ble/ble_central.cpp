@@ -20,6 +20,8 @@
 #include <nrf_assert.h>
 #include <nrf_ble_gatt.h>
 #include <nrf_ble_gq.h>
+#include <nrf_log.h>
+#include <nrf_log.h>
 #include <nrf_ble_scan.h>
 
 namespace ble_central {
@@ -49,7 +51,7 @@ static void db_discovery_init();
 // Public Implementations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-ret_code_t init(const ble_common::Config &config)
+void init(const ble_common::Config &config)
 {
     /* Preconditions */
     ASSERT(config.type == ble_common::Config::ConfigType::CENTRAL);
@@ -63,17 +65,14 @@ ret_code_t init(const ble_common::Config &config)
            g_gatt != nullptr &&
            g_gatt_queue != nullptr &&
            g_discovery != nullptr);
-    
-    /* Ensure common BLE init takes place first */
-    bool common_is_initialized = *static_cast<bool *>(config.ble_observer->p_context);
-    
-    if (!common_is_initialized) {
-        ble_common::init(config);
-    }
+
+    ble_common::init(config);
 
     /* Initialize BLE central-specific modules */
     scan_init(config.central_config.scan_handler);
-    db_discovery_init();
+    
+    // TODO CMK 07/03/20: want to use DB discovery? should be common?
+//    db_discovery_init();
 }
 
 void set_addr_scan_filter(const ble_gap_addr_t &addr)
@@ -90,8 +89,10 @@ void set_addr_scan_filter(const ble_gap_addr_t &addr)
 void set_uuid_appearance_scan_filter(const ble_uuid_t &uuid, uint16_t appearance)
 {
     ASSERT(g_scan != nullptr);
+    
     APP_ERROR_CHECK(nrf_ble_scan_filters_disable(g_scan));
     APP_ERROR_CHECK(nrf_ble_scan_all_filter_remove(g_scan));
+    
     APP_ERROR_CHECK(nrf_ble_scan_filters_enable(g_scan, 
                     (NRF_BLE_SCAN_UUID_FILTER | NRF_BLE_SCAN_APPEARANCE_FILTER), true));
 

@@ -30,28 +30,32 @@ namespace ble_common {
 static void ble_stack_init();
 
 /** Function for the Peer Manager initialization. */
-static ret_code_t peer_manager_init();
+static void peer_manager_init();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Internal Data
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+/**< Whether or not the common BLE init has already taken place. */
+static bool g_initialized { false };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Implementations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-ret_code_t init(const Config &config)
+// TODO CMK 07/03/20: init peer_manager (?)
+void init(const Config &config)
 {
+    if (g_initialized) {
+        return;
+    }
+    
     ble_stack_init();
     
     // TODO CMK 06/19/20: GATT event handler (?)
     APP_ERROR_CHECK(nrf_ble_gatt_init(config.gatt, nullptr));
     
-    /* Signal that common initialization has completed. This is the only place
-       this flag should be modified. */
-    *static_cast<bool *>(config.ble_observer->p_context) = true;
+    g_initialized = true;
 }
 
 void event_handler(ble_evt_t const *p_ble_evt, void *p_context)
@@ -78,7 +82,7 @@ static void ble_stack_init()
     APP_ERROR_CHECK(nrf_sdh_ble_enable(&ram_start));
 }
 
-static ret_code_t peer_manager_init()
+static void peer_manager_init()
 {
     ble_gap_sec_params_t sec_param;
     ret_code_t           err_code;

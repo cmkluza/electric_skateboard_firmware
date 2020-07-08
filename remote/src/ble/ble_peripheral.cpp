@@ -66,22 +66,19 @@ static ble_advertising_t *g_advertising; /**< nRF BLE advertising instance. */
 static void gap_init();
 
 /** Function for initializing the Advertising functionality. */
-static ret_code_t advertising_init();
+static void advertising_init();
 
 /** Function for initializing services that will be used by the application. */
-static ret_code_t services_init();
+static void services_init();
 
 /** Function for initializing the Connection Parameters module. */
-static ret_code_t conn_params_init();
-
-/** Clear bond information from persistent storage. */
-static void delete_bonds();
+static void conn_params_init();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Implementations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-ret_code_t init(const ble_common::Config &config)
+void init(const ble_common::Config &config)
 {
     /* Preconditions */
     ASSERT(config.type == ble_common::Config::ConfigType::PERIPHERAL);
@@ -92,37 +89,18 @@ ret_code_t init(const ble_common::Config &config)
     ASSERT(g_gatt != nullptr &&
            g_advertising != nullptr);
     
-    /* Ensure common BLE init takes place first */
-    bool common_is_initialized = *static_cast<bool *>(config.ble_observer->p_context);
-    
-    if (!common_is_initialized) {
-        ble_common::init(config);
-    }
-    
+    ble_common::init(config);
+
     /* Initialize BLE peripheral-specific modules */ 
-    ret_code_t err_code;
-    
     gap_init();
-    
-    if (NRF_SUCCESS != (err_code = advertising_init())) {
-        return err_code;
-    }
-    
-    if (NRF_SUCCESS != (err_code = services_init())) {
-        return err_code;
-    }
-    
-    if (NRF_SUCCESS != (err_code = conn_params_init())) {
-        return err_code;
-    }
-    
-    return NRF_SUCCESS;
+    advertising_init();
+    services_init();
+    conn_params_init();
 }
 
 void advertising_start(bool erase_bonds)
 {
     if (erase_bonds) {
-        delete_bonds();
         // TODO CMK 06/24/20: start advertising in event handler upon PM_EVT_PEERS_DELETE_SUCCEEDED 
         // Advertising is started by PM_EVT_PEERS_DELETE_SUCCEEDED event.
     } else {
@@ -157,13 +135,12 @@ static void gap_init()
     APP_ERROR_CHECK(sd_ble_gap_ppcp_set(&params));
 }
 
-static ret_code_t advertising_init()
+// TODO CMK 07/03/20: finish advertising init
+static void advertising_init()
 {
-    ret_code_t             err_code;
-    
     ble_advertising_init_t init = {};
 
-//        ble_advdata_t           advdata;       /**< Advertising data: name, appearance, discovery flags, and more. */
+//    ble_advdata_t           advdata;       /**< Advertising data: name, appearance, discovery flags, and more. */
 //    ble_advdata_t           srdata;        /**< Scan response data: Supplement to advertising data. */
 //    ble_adv_modes_config_t  config;        /**< Select which advertising modes and intervals will be utilized.*/
 //    ble_adv_evt_handler_t   evt_handler;   /**< Event handler that will be called upon advertising events. */
@@ -178,46 +155,33 @@ static ret_code_t advertising_init()
     // TODO CMK 06/19/20: advertising event handler
     init.evt_handler = nullptr;
 
-    err_code = ble_advertising_init(g_advertising, &init);
-    APP_ERROR_CHECK(err_code);
+    APP_ERROR_CHECK(ble_advertising_init(g_advertising, &init));
 
     ble_advertising_conn_cfg_tag_set(g_advertising, BLE_COMMON_CONN_CFG_TAG);
 }
 
-static ret_code_t services_init()
+// TODO CMK 07/03/20: what is DIS, do I want it
+// TODO CMK 07/03/20: add electric skateboard client
+static void services_init()
 {
-    ret_code_t         err_code;
-    ble_dis_init_t     dis_init;
-
-    // Initialize Device Information Service.
-    memset(&dis_init, 0, sizeof(dis_init));
-
-    ble_srv_ascii_to_utf8(&dis_init.manufact_name_str, (char *)BLE_PERIPHERAL_MANUFACTURER_NAME);
-
-    dis_init.dis_char_rd_sec = SEC_OPEN;
-
-    err_code = ble_dis_init(&dis_init);
-    APP_ERROR_CHECK(err_code);
+    (void)10;
+    return;
 }
 
-static ret_code_t conn_params_init()
+static void conn_params_init()
 {
-    ret_code_t             err_code;
-    ble_conn_params_init_t cp_init;
+    ble_conn_params_init_t init = {};
 
-    memset(&cp_init, 0, sizeof(cp_init));
-
-    cp_init.p_conn_params                  = nullptr;
-    cp_init.first_conn_params_update_delay = BLE_PERIPHERAL_FIRST_CONN_PARAMS_UPDATE_DELAY;
-    cp_init.next_conn_params_update_delay  = BLE_PERIPHERAL_NEXT_CONN_PARAMS_UPDATE_DELAY;
-    cp_init.max_conn_params_update_count   = BLE_PERIPHERAL_MAX_CONN_PARAMS_UPDATE_COUNT;
-    cp_init.disconnect_on_fail             = false;
+    init.p_conn_params                  = nullptr;
+    init.first_conn_params_update_delay = BLE_PERIPHERAL_FIRST_CONN_PARAMS_UPDATE_DELAY;
+    init.next_conn_params_update_delay  = BLE_PERIPHERAL_NEXT_CONN_PARAMS_UPDATE_DELAY;
+    init.max_conn_params_update_count   = BLE_PERIPHERAL_MAX_CONN_PARAMS_UPDATE_COUNT;
+    init.disconnect_on_fail             = false;
     /* TODO CMK 06/19/20: event and error handlers */
-    cp_init.evt_handler                    = nullptr;
-    cp_init.error_handler                  = nullptr;
+    init.evt_handler                    = nullptr;
+    init.error_handler                  = nullptr;
 
-    err_code = ble_conn_params_init(&cp_init);
-    APP_ERROR_CHECK(err_code);
+    APP_ERROR_CHECK(ble_conn_params_init(&init));
 }
 
 
