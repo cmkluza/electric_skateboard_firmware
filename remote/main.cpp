@@ -7,6 +7,7 @@
  * Distributed under the MIT license (see LICENSE or https://opensource.org/licenses/MIT)
  */
 
+#include "ble_central.hpp"
 #include "ble_remote.hpp"
 #include "esk8_fds.hpp"
 #include "logger.hpp"
@@ -14,7 +15,12 @@
 
 #include <app_error.h>
 #include <fds.h>
+#include <nrf_log.h>
+#include <nrf_sdh_freertos.h>
 #include <sdk_errors.h>
+
+#include <FreeRTOS.h>
+#include <task.h>
 
 /** BLE Notes
  *
@@ -37,7 +43,16 @@
  *    etc.
  */
 
+// TODO CMK 07/03/20: rename everything, remove "esk8"
+// TODO CMK 07/03/20: implement a "delete_bonds" type function
+// TODO CMK 07/03/20: make proper electric skateboard BLE service/client
+// TODO CMK 07/03/20: sensor simulator
 // TODO CMK 06/24/20: power management
+// TODO CMK 07/03/20: peer manager (?)
+// TODO CMK 07/03/20: DB discovery (?)
+// TODO CMK 07/03/20: GAP params (for advertising, if doing dual-role)
+// TODO CMK 07/03/20: Advertising (if doing dual-role)
+// TODO CMK 07/03/20: Connection parameters (if doing dual-role)
 
 int main()
 {
@@ -48,13 +63,20 @@ int main()
     util::clock_init();
 
     /* Library and module initialization */
-    esk8_fds::init();
+    // TODO CMK 07/03/20: FDS
+    //esk8_fds::init();
     
     /* BLE initialization */
     ble_remote::init();
     
+    /* Setup the SDH thread to start scanning */
+    nrf_sdh_freertos_init([](void *ignored) {
+        ble_central::begin_scanning();
+    }, nullptr);
+
     /* FreeRTOS initialization */
-    
+    NRF_LOG_INFO("FreeRTOS Starting");
+    vTaskStartScheduler();
 
     /* Should never reach here */
     APP_ERROR_HANDLER(-1);
