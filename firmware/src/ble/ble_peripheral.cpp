@@ -93,14 +93,31 @@ void init(const ble_common::Config &config)
     db_discovery_init(config.db_discovery_handler);
 }
 
-void advertising_start(bool erase_bonds) 
+void advertise_name()
 {
-    if (erase_bonds) {
-        // TODO CMK 06/24/20: start advertising in event handler upon PM_EVT_PEERS_DELETE_SUCCEEDED
-        // Advertising is started by PM_EVT_PEERS_DELETE_SUCCEEDED event.
-    } else {
-        APP_ERROR_CHECK(ble_advertising_start(g_advertising, BLE_ADV_MODE_FAST));
-    }
+    ble_advdata_t advdata = {
+        .name_type = BLE_ADVDATA_FULL_NAME,
+    };
+    
+    APP_ERROR_CHECK(ble_advertising_advdata_update(g_advertising, &advdata, nullptr));
+}
+    
+void advertise_uuid_appearance(ble_uuid_t &uuid)
+{
+    ble_advdata_t advdata = {
+        .include_appearance = true,
+        .uuids_complete {
+            .uuid_cnt = 1,
+            .p_uuids = &uuid,
+        },
+    };
+    
+    APP_ERROR_CHECK(ble_advertising_advdata_update(g_advertising, &advdata, nullptr));
+}
+
+void start_advertising()
+{
+    APP_ERROR_CHECK(ble_advertising_start(g_advertising, BLE_ADV_MODE_FAST));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

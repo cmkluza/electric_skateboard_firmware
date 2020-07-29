@@ -31,10 +31,18 @@ namespace ble_peripheral {
      */
     void init(const ble_common::Config &config);
     
+    /**
+     * Sets advertising data to advertise this device's name.
+     */
+    void advertise_name();
+    
+    /**
+     * Sets advertising data to advertise the ES service UUID and appearance.
+     */
+    void advertise_uuid_appearance(ble_uuid_t &uuid);
+    
     /** 
       * Starts advertising. 
-      * 
-      * @param[in] erase_bonds Whether or not to erase BLE bonds
       */
-    void advertising_start(bool erase_bonds);
+    void start_advertising();
 } // namespace ble_peripheral
