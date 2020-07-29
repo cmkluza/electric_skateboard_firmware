@@ -20,6 +20,8 @@
 #include <peer_manager.h>
 #include <peer_manager_handler.h>
 
+#include <cstdint>
+
 namespace ble_common {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,16 +60,6 @@ void init(const Config &config)
     g_initialized = true;
 }
 
-void event_handler(ble_evt_t const *p_ble_evt, void *p_context)
-{
-    // TODO CMK 06/24/20: implement common BLE event handling/dispatch
-    //                    seems there's also functions in the modules I'm using that might need to
-    //                    be called manually in here? see below, check examples.
-//    @details This function must be called from the BLE stack event dispatcher for
-//          the module to handle BLE events that are relevant for the Advertising Module.
-//    void ble_advertising_on_ble_evt(ble_evt_t const * p_ble_evt, void * p_adv);
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Internal Implementations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,7 +68,7 @@ static void ble_stack_init()
 {
     APP_ERROR_CHECK(nrf_sdh_enable_request());
 
-    uint32_t ram_start = {};
+    std::uint32_t ram_start = {};
     APP_ERROR_CHECK(nrf_sdh_ble_default_cfg_set(BLE_COMMON_CONN_CFG_TAG, &ram_start));
 
     APP_ERROR_CHECK(nrf_sdh_ble_enable(&ram_start));

@@ -48,7 +48,7 @@ void init()
     }
 }
 
-bool record_is_present(uint16_t file_id, uint16_t record_key, fds_record_desc_t *p_desc)
+bool record_is_present(std::uint16_t file_id, std::uint16_t record_key, fds_record_desc_t *p_desc)
 {
     fds_find_token_t tok = {};
 
@@ -65,7 +65,7 @@ bool record_is_present(uint16_t file_id, uint16_t record_key, fds_record_desc_t 
     return false;
 }
 
-ret_code_t read_record(fds_record_desc_t *desc, uint8_t *buffer, size_t buffer_len)
+ret_code_t read_record(fds_record_desc_t *desc, std::uint8_t *buffer, size_t buffer_len)
 {
     fds_flash_record_t config = {};
         

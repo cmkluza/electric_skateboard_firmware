@@ -17,6 +17,8 @@
 #include <ble_gap.h>
 #include <ble_types.h>
 #include <sdk_errors.h>
+
+#include <cstdint>
  
 namespace ble_central {
 
@@ -44,7 +46,7 @@ namespace ble_central {
      * @param[in] uuid reference to the BLE UUID to filter for.
      * @param[in] appearance the BLE appearance to filter for.
      */
-    void set_uuid_appearance_scan_filter(const ble_uuid_t &uuid, uint16_t appearance);
+    void set_uuid_appearance_scan_filter(const ble_uuid_t &uuid, std::uint16_t appearance);
     
     /**
      * Begins scanning for BLE devices.

@@ -16,7 +16,6 @@
 
 #include "ble_central.hpp"
 
-#include <ble_db_discovery.h>
 #include <nrf_assert.h>
 #include <nrf_ble_gatt.h>
 #include <nrf_ble_gq.h>
@@ -32,8 +31,6 @@ namespace ble_central {
 
 static nrf_ble_gatt_t *g_gatt; /**< nRF BLE GATT instance. */
 static nrf_ble_scan_t *g_scan; /**< nRF BLE scanner instance. */
-static nrf_ble_gq_t *g_gatt_queue; /**< nRF GATT queue instance. */
-static ble_db_discovery_t *g_discovery; /**< nRF BLE discovery instance. */
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Internal Prototypes
@@ -44,35 +41,22 @@ static ble_db_discovery_t *g_discovery; /**< nRF BLE discovery instance. */
  */
 static void scan_init(nrf_ble_scan_evt_handler_t event_handler);
 
-/** TODO CMK 06/29/20: document */
-static void db_discovery_init();
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Implementations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void init(const ble_common::Config &config)
 {
-    /* Preconditions */
-    ASSERT(config.type == ble_common::Config::ConfigType::CENTRAL);
-    
     g_gatt = config.gatt;
-    g_scan = config.central_config.scan;
-    g_gatt_queue = config.central_config.gatt_queue;
-    g_discovery = config.central_config.discovery;
+    g_scan = config.scan;
     
     ASSERT(g_scan != nullptr &&
-           g_gatt != nullptr &&
-           g_gatt_queue != nullptr &&
-           g_discovery != nullptr);
+           g_gatt != nullptr);
 
     ble_common::init(config);
 
     /* Initialize BLE central-specific modules */
-    scan_init(config.central_config.scan_handler);
-    
-    // TODO CMK 07/03/20: want to use DB discovery? should be common?
-//    db_discovery_init();
+    scan_init(config.scan_handler);
 }
 
 void set_addr_scan_filter(const ble_gap_addr_t &addr)
@@ -86,7 +70,7 @@ void set_addr_scan_filter(const ble_gap_addr_t &addr)
     nrf_ble_scan_filter_set(g_scan, SCAN_ADDR_FILTER, addr.addr);
 }
 
-void set_uuid_appearance_scan_filter(const ble_uuid_t &uuid, uint16_t appearance)
+void set_uuid_appearance_scan_filter(const ble_uuid_t &uuid, std::uint16_t appearance)
 {
     ASSERT(g_scan != nullptr);
     
@@ -116,23 +100,12 @@ static void scan_init(nrf_ble_scan_evt_handler_t event_handler)
 {
     nrf_ble_scan_init_t init = {
         .p_scan_param = nullptr, /** Use default scan parameters. */
-        .connect_if_match = false, /** Let app handle potential connections. */
+        .connect_if_match = true, /** Connect once a filter match is found. */
         .p_conn_param = nullptr, /** Use default connection parameters. */
         .conn_cfg_tag = BLE_COMMON_CONN_CFG_TAG,
     };
     
     APP_ERROR_CHECK(nrf_ble_scan_init(g_scan, &init, event_handler));
-}
-
-static void db_discovery_init()
-{
-    ble_db_discovery_init_t db_init;
-
-    // TODO CMK 06/25/20: db event handler
-    db_init.evt_handler  = nullptr;
-    db_init.p_gatt_queue = g_gatt_queue;
-
-    APP_ERROR_CHECK(ble_db_discovery_init(&db_init));
 }
 
 } // namespace ble_central

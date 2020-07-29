@@ -87,10 +87,6 @@ BLE_ADVERTISING_DEF(g_advertising);
 
 BLE_DB_DISCOVERY_DEF(g_db_discovery);
 
-/**< The BLE initialization context. */
-// TODO CMK 07/05/20: does this need to be global?
-static ble_common::Config g_config;
-
 /**< The BLE address of the paired receiver. Set to 0 when no receiver is paired. */
 static ble_gap_addr_t g_paired_addr;
 
@@ -100,14 +96,17 @@ static ble_gap_addr_t g_paired_addr;
 
 void init()
 {   
-    g_config.gatt                          = &g_gatt;
-    g_config.gatt_queue                    = &g_gatt_queue;
-    g_config.peripheral_config.advertising = &g_advertising;
-    g_config.peripheral_config.discovery   = &g_db_discovery;
-    g_config.type                          = ble_common::Config::ConfigType::PERIPHERAL;
-    g_config.peripheral_config.db_discovery_handler = &db_discovery_evt_handler;
+    auto config = ble_common::Config {
+        .gatt                   = &g_gatt,
+        .gatt_queue             = &g_gatt_queue,
+        .scan                   = nullptr,
+        .scan_handler           = nullptr,
+        .advertising            = &g_advertising,
+        .discovery              = &g_db_discovery,
+        .db_discovery_handler   = &db_discovery_evt_handler,
+    };
     
-    ble_peripheral::init(g_config);
+    ble_peripheral::init(config);
     
     init_paired_addr();
     
@@ -134,7 +133,7 @@ static void init_paired_addr()
     
     if (es_fds::record_is_present(BLE_COMMON_FDS_ADDR_FILE_ID, 
                                     BLE_COMMON_FDS_ADDR_RECORD_KEY, &desc)) {
-        if (es_fds::read_record(&desc, reinterpret_cast<uint8_t *>(&g_paired_addr), 
+        if (es_fds::read_record(&desc, reinterpret_cast<std::uint8_t *>(&g_paired_addr), 
                 sizeof(g_paired_addr)) == NRF_SUCCESS) {
             return;
         }

@@ -11,6 +11,8 @@
 
 #include <ble_types.h>
 
+#include <cstdint>
+
 /**
  * Macros for printing 6-byte MAC addresses.
  */
@@ -37,10 +39,10 @@
 namespace util {
 
     /**< Length of a 16-bit UUID. */
-    static inline constexpr uint32_t UUID16_LEN = { 2 };
+    static inline constexpr std::uint32_t UUID16_LEN = { 2 };
 
     /**< Length of a 128-bit UUID. */
-    static inline constexpr uint32_t UUID128_LEN = { 16 };
+    static inline constexpr std::uint32_t UUID128_LEN = { 16 };
 
     /** 
      * Function for initializing the clock.

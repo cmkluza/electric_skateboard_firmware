@@ -65,13 +65,13 @@ void log_uuid(const ble_uuid128_t *uuid)
 void log_ble_data(const ble_data_t *data)
 {
     /* Log the device name */
-    uint8_t const * p_parsed_name;
+    std::uint8_t const * p_parsed_name;
 
-    uint16_t offset { 0 };
-    uint16_t len = ble_advdata_search(data->p_data, data->len, &offset,
-                                      BLE_GAP_AD_TYPE_COMPLETE_LOCAL_NAME);
+    std::uint16_t offset { 0 };
+    std::uint16_t len = ble_advdata_search(data->p_data, data->len, &offset,
+                                           BLE_GAP_AD_TYPE_COMPLETE_LOCAL_NAME);
 
-    uint8_t *name_data = &data->p_data[offset];
+    std::uint8_t *name_data = &data->p_data[offset];
     char name[31] = {};
     // BLE advertisement should always be smaller than this, but be sure
     len = len < 30 ? len : 30;
@@ -89,8 +89,8 @@ void log_ble_data(const ble_data_t *data)
     }
     
     if (0 != offset) {
-        uint8_t *uuid_data = &data->p_data[offset];
-        for (uint16_t uuid_offset = 0; uuid_offset < len; uuid_offset += UUID16_LEN) {
+        std::uint8_t *uuid_data = &data->p_data[offset];
+        for (std::uint16_t uuid_offset = 0; uuid_offset < len; uuid_offset += UUID16_LEN) {
             NRF_LOG_RAW_INFO("16-bit UUID: 0x%02X%02X\n",
                              uuid_data[uuid_offset + 1], uuid_data[uuid_offset]);
         }
@@ -106,9 +106,9 @@ void log_ble_data(const ble_data_t *data)
     }
     
     if (0 != offset) {
-        uint8_t *uuid_data = &data->p_data[offset];
+        std::uint8_t *uuid_data = &data->p_data[offset];
         ble_uuid128_t uuid;
-        for (uint16_t uuid_offset = 0; uuid_offset < len; uuid_offset += UUID128_LEN) {
+        for (std::uint16_t uuid_offset = 0; uuid_offset < len; uuid_offset += UUID128_LEN) {
             memcpy(uuid.uuid128, &uuid_data[uuid_offset], UUID128_LEN);
             log_uuid(&uuid);
         }

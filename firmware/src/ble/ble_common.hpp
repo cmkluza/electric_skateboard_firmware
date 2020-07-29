@@ -28,47 +28,34 @@ namespace ble_common {
 
 SUPPRESS_WARNING_START("-Wsubobject-linkage")
 
-    struct Config {
-        /**< Common BLE observer instance. */
-        nrf_sdh_ble_evt_observer_t *ble_observer;
-        /**< nRF BLE GATT instance. */
-        nrf_ble_gatt_t *gatt;
+struct Config {
+    /**< nRF BLE GATT instance. */
+    nrf_ble_gatt_t *gatt;
     
-        union {
-            struct {
-                /**< nRF BLE scanner instance. */
-                nrf_ble_scan_t *scan;
-                /**< Scan event handler. */
-                nrf_ble_scan_evt_handler_t scan_handler;
-                /**< nRF GATT queue instance. */
-                nrf_ble_gq_t *gatt_queue;
-                /**< nRF BLE discovery instance. */
-                ble_db_discovery_t *discovery;
-            } central_config;
-            struct {
-                /**< nRF advertiser instance. */
-                ble_advertising_t *advertising;
-            } peripheral_config;
-        };
+    /**< nRF GATT queue instance. */
+    nrf_ble_gq_t *gatt_queue;
     
-        enum class ConfigType {
-            CENTRAL,
-            PERIPHERAL,
-        } type;
-    };
+    /**< nRF BLE scanner instance (central only). */
+    nrf_ble_scan_t *scan;
+    /**< Scan event handler (central only). */
+    nrf_ble_scan_evt_handler_t scan_handler;
+
+    /**< nRF advertiser instance (peripheral only). */
+    ble_advertising_t *advertising;
+
+    /**< nRF BLE discovery instance (peripheral only). */
+    ble_db_discovery_t *discovery;
+    /**< DB discovery event handler (peripheral only). */
+    ble_db_discovery_evt_handler_t db_discovery_handler;
+};
 
 SUPPRESS_WARNING_END()
 
-    /**
-     * Initializes common BLE stack and modules.
-     *
-     * TODO CMK 06/24/20: specifics
-     */
-    void init(const Config &config);
-    
-    /**
-     * Callback to handle BLE events.
-     */
-    void event_handler(ble_evt_t const *p_ble_evt, void *p_context);
-        
+/**
+ * Initializes common BLE stack and modules.
+ *
+ * TODO CMK 06/24/20: specifics
+ */
+void init(const Config &config);
+
 } // namespace ble_common

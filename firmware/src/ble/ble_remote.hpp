@@ -9,11 +9,18 @@
 
 #pragma once
 
+#include <cstdint>
+
 namespace ble_remote {
     
     /**
      * Initializes the BLE stack and starts scanning for a receiver.
      */
     void init();
+    
+    /**
+     *
+     */
+    void update_sensor_value(std::uint8_t value);
     
 }; // namespace ble_remote

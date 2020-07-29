@@ -43,16 +43,10 @@ namespace ble_peripheral {
 // Internal Data
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-static uint16_t g_conn_handle { BLE_CONN_HANDLE_INVALID };
-static ble_uuid_t g_adv_uuids[] =
-{
-    /* TODO CMK 06/21/20: Fill in type dynamically during init */
-    //{BLEESServer::UUID_SERVICE, BLE_UUID_TYPE_UNKNOWN},
-    {BLE_UUID_DEVICE_INFORMATION_SERVICE, BLE_UUID_TYPE_BLE}
-};
-
 static nrf_ble_gatt_t *g_gatt; /**< nRF BLE GATT instance. */
 static ble_advertising_t *g_advertising; /**< nRF BLE advertising instance. */
+static ble_db_discovery_t *g_discovery; /**< nRF DB discovery instance. */
+static nrf_ble_gq_t *g_gatt_queue;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Internal Prototypes
@@ -68,11 +62,11 @@ static void gap_init();
 /** Function for initializing the Advertising functionality. */
 static void advertising_init();
 
-/** Function for initializing services that will be used by the application. */
-static void services_init();
-
 /** Function for initializing the Connection Parameters module. */
 static void conn_params_init();
+
+/** Initialize the DB discovery module. */
+static void db_discovery_init(ble_db_discovery_evt_handler_t handler);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Implementations
@@ -80,28 +74,29 @@ static void conn_params_init();
 
 void init(const ble_common::Config &config)
 {
-    /* Preconditions */
-    ASSERT(config.type == ble_common::Config::ConfigType::PERIPHERAL);
-    
     g_gatt = config.gatt;
-    g_advertising = config.peripheral_config.advertising;
+    g_gatt_queue = config.gatt_queue;
+    g_advertising = config.advertising;
+    g_discovery = config.discovery;
     
     ASSERT(g_gatt != nullptr &&
-           g_advertising != nullptr);
+           g_gatt_queue != nullptr &&
+           g_advertising != nullptr &&
+           g_discovery != nullptr);
     
     ble_common::init(config);
-
-    /* Initialize BLE peripheral-specific modules */ 
+    
+    /* Initialize BLE peripheral-specific modules */
     gap_init();
     advertising_init();
-    services_init();
     conn_params_init();
+    db_discovery_init(config.db_discovery_handler);
 }
 
-void advertising_start(bool erase_bonds)
+void advertising_start(bool erase_bonds) 
 {
     if (erase_bonds) {
-        // TODO CMK 06/24/20: start advertising in event handler upon PM_EVT_PEERS_DELETE_SUCCEEDED 
+        // TODO CMK 06/24/20: start advertising in event handler upon PM_EVT_PEERS_DELETE_SUCCEEDED
         // Advertising is started by PM_EVT_PEERS_DELETE_SUCCEEDED event.
     } else {
         APP_ERROR_CHECK(ble_advertising_start(g_advertising, BLE_ADV_MODE_FAST));
@@ -119,11 +114,11 @@ static void gap_init()
 
     APP_ERROR_CHECK(
         sd_ble_gap_device_name_set(&sec_mode,
-                                   reinterpret_cast<const uint8_t *>(BLE_PERIPHERAL_DEVICE_NAME),
-                                   strlen(BLE_PERIPHERAL_DEVICE_NAME)));
+           reinterpret_cast<const std::uint8_t *>(BLE_PERIPHERAL_DEVICE_NAME),
+           strlen(BLE_PERIPHERAL_DEVICE_NAME))
+    );
     
-    /* TODO CMK 06/20/20: is there a better appearance type/does it matter */
-    APP_ERROR_CHECK(sd_ble_gap_appearance_set(BLE_APPEARANCE_GENERIC_CYCLING));
+    APP_ERROR_CHECK(sd_ble_gap_appearance_set(BLEESClient::APPEARANCE));
 
     ble_gap_conn_params_t params = {
         .min_conn_interval = BLE_PERIPHERAL_MIN_CONN_INTERVAL,
@@ -135,37 +130,21 @@ static void gap_init()
     APP_ERROR_CHECK(sd_ble_gap_ppcp_set(&params));
 }
 
-// TODO CMK 07/03/20: finish advertising init
 static void advertising_init()
 {
     ble_advertising_init_t init = {};
-
-//    ble_advdata_t           advdata;       /**< Advertising data: name, appearance, discovery flags, and more. */
-//    ble_advdata_t           srdata;        /**< Scan response data: Supplement to advertising data. */
-//    ble_adv_modes_config_t  config;        /**< Select which advertising modes and intervals will be utilized.*/
-//    ble_adv_evt_handler_t   evt_handler;   /**< Event handler that will be called upon advertising events. */
-//    ble_adv_error_handler_t error_handler; /**< Error handler that will propogate internal errors to the main applications. */
-
-    /* Advertising data (name, appearance, discovery flags, etc) */
-    init.advdata.name_type = BLE_ADVDATA_FULL_NAME; /**< Advertise full device name */
-    init.advdata.include_appearance = true;
-    init.advdata.flags = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE; /**< Advertise indefinitely */
     
-
+    init.config.ble_adv_fast_enabled  = true;
+    init.config.ble_adv_fast_interval = BLE_PERIPHERAL_ADV_INTERVAL;
+    init.config.ble_adv_fast_timeout  = BLE_PERIPHERAL_ADV_DURATION;
+    
     // TODO CMK 06/19/20: advertising event handler
     init.evt_handler = nullptr;
+    init.error_handler = nullptr;
 
     APP_ERROR_CHECK(ble_advertising_init(g_advertising, &init));
 
     ble_advertising_conn_cfg_tag_set(g_advertising, BLE_COMMON_CONN_CFG_TAG);
-}
-
-// TODO CMK 07/03/20: what is DIS, do I want it
-// TODO CMK 07/03/20: add electric skateboard client
-static void services_init()
-{
-    (void)10;
-    return;
 }
 
 static void conn_params_init()
@@ -184,6 +163,14 @@ static void conn_params_init()
     APP_ERROR_CHECK(ble_conn_params_init(&init));
 }
 
+static void db_discovery_init(ble_db_discovery_evt_handler_t handler)
+{
+    ble_db_discovery_init_t db_init {
+        .evt_handler = handler,
+        .p_gatt_queue = g_gatt_queue,
+    };
 
+    APP_ERROR_CHECK(ble_db_discovery_init(&db_init));
+}
 
 } // namespace ble_peripheral

@@ -21,7 +21,7 @@ void HardFault_process(HardFault_stack_t *p_stack)
 
 #if 0 // TODO CMK 06/19/20: implement app error handling
 extern "C"
-void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info)
+void app_error_fault_handler(std::uint32_t id, std::uint32_t pc, std::uint32_t info)
 {
 
 }
