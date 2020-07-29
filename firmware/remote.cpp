@@ -22,17 +22,6 @@
 #include <FreeRTOS.h>
 #include <task.h>
 
-// TODO CMK 07/03/20: make proper electric skateboard BLE service/client
-// TODO CMK 07/03/20: implement a "delete_bonds" type function
-// TODO CMK 07/03/20: sensor simulator
-// TODO CMK 07/11/20: security
-// TODO CMK 06/24/20: power management
-// TODO CMK 07/03/20: peer manager (?)
-// TODO CMK 07/03/20: DB discovery (?)
-// TODO CMK 07/03/20: GAP params (for advertising, if doing dual-role)
-// TODO CMK 07/03/20: Advertising (if doing dual-role)
-// TODO CMK 07/03/20: Connection parameters (if doing dual-role)
-
 int main()
 {
     /* Early init */

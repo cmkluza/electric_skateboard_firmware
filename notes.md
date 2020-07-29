@@ -47,7 +47,7 @@ This is a scratchpad for notes as this project develops.
 
 ## BLE Modules
 ### Remote (`src/ble/ble_remote.cpp,hpp`)
-This is the top-level BLE module for the remote. Application <-> BLE interactions
+This is the top-level BLE module for the remote. Application ↔ BLE interactions
 should all take place through this module.
 #### Application ↔ Remote Interactions:
 - App → BLE: BLE initialization
@@ -55,9 +55,18 @@ should all take place through this module.
 - App → BLE: new sensor data
 
 ### Receiver (`src/ble/ble_receiver.cpp,hpp`)
-This is the top-level BLE module for the receiver. Application <-> BLE interactions
+This is the top-level BLE module for the receiver. Application ↔ BLE interactions
 should all take place through this module.
 #### Application ↔ Remote Interactions:
 - App → BLE: BLE initialization
 - BLE → App: BLE initialization complete
 - App ← BLE: new sensor data
+
+# TODOs
+- 07/29/20 (both): Go through and add consistent formatting for comments/documentation
+    especially in headers
+- 07/29/20 (both): Implement BLE ES server/client ready alerts to the client
+- 07/29/20 (both): Test BLE ES server/client
+- 07/29/20 (both): Implement secure BLE comms (using peer manager?)
+- 07/03/20 (both): Implement a "delete_bonds" type function
+- 06/24/20 (both): Implement power management
