@@ -135,7 +135,7 @@ static void gap_init()
            strlen(BLE_PERIPHERAL_DEVICE_NAME))
     );
     
-    APP_ERROR_CHECK(sd_ble_gap_appearance_set(BLEESClient::APPEARANCE));
+    APP_ERROR_CHECK(sd_ble_gap_appearance_set(BLEESCommon::APPEARANCE));
 
     ble_gap_conn_params_t params = {
         .min_conn_interval = BLE_PERIPHERAL_MIN_CONN_INTERVAL,

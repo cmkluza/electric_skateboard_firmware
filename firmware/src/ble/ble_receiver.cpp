@@ -80,7 +80,7 @@ BLE_ES_CLIENT_DEF(g_es_client);
 static ble_uuid_t g_adv_uuids[] =
 {
     /* TODO CMK 06/21/20: Fill in type dynamically during init */
-    {BLEESServer::UUID_SERVICE, BLE_UUID_TYPE_UNKNOWN},
+    {BLEESCommon::UUID_SERVICE, BLE_UUID_TYPE_UNKNOWN},
     {BLE_UUID_DEVICE_INFORMATION_SERVICE, BLE_UUID_TYPE_BLE}
 };
 BLE_ADVERTISING_DEF(g_advertising);
@@ -114,8 +114,8 @@ void init()
     g_es_client.register_sensor_data_callback(sensor_data_callback);
     
     ble_uuid_t uuid {
-        .uuid = BLEESClient::UUID_SERVICE,
-        .type = g_es_client.uuid_type(),
+        .uuid = BLEESCommon::UUID_SERVICE,
+        .type = BLEESCommon::uuid_type(),
     };
     
     // TODO CMK  07/27/20: choose what kind of advertising based on if g_paired_addr is found

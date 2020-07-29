@@ -17,19 +17,16 @@
 void BLEESServer::init()
 {
     /* Default init member variables */
-    _service_handle = BLE_GATT_HANDLE_INVALID;
     _sensor_char_handles = {};
-    _uuid_type = BLE_UUID_TYPE_UNKNOWN;
     _conn_handle = BLE_CONN_HANDLE_INVALID;
     
-    /* Add vendor specific 128-bit UUID */
-    ble_uuid128_t base_uuid = UUID_BASE;
-    APP_ERROR_CHECK(sd_ble_uuid_vs_add(&base_uuid, &_uuid_type));
+    /* Initialize the service UUID */
+    BLEESCommon::init();
     
     /* Add custom electric skateboard service */
     ble_uuid_t uuid {
-        .uuid = UUID_SERVICE,
-        .type = _uuid_type,
+        .uuid = BLEESCommon::UUID_SERVICE,
+        .type = BLEESCommon::uuid_type(),
     };
     APP_ERROR_CHECK(
         sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY, &uuid, &_service_handle));
@@ -39,8 +36,8 @@ void BLEESServer::init()
     ble_add_char_params_t add_char_params = {};
 
     /* Sensor characteristic */
-    add_char_params.uuid                        = { UUID_SENSOR_CHAR };
-    add_char_params.uuid_type                   = { _uuid_type };
+    add_char_params.uuid                        = { BLEESCommon::UUID_SENSOR_CHAR };
+    add_char_params.uuid_type                   = { BLEESCommon::uuid_type() };
     
     /* Fixed length, initialize to 0 */
     // TODO CMK 06/22/20: verify data type for sensor data
@@ -79,7 +76,9 @@ void BLEESServer::init()
     /* No characteristic presentation format descriptor */
     add_char_params.p_presentation_format       = { nullptr };
     
-    APP_ERROR_CHECK(characteristic_add(_service_handle, &add_char_params, &_sensor_char_handles));
+    APP_ERROR_CHECK(
+        characteristic_add(_service_handle, &add_char_params, &_sensor_char_handles)
+    );
 }
 
 // TODO CMK 07/27/20: verify sd_ble_gatts_hvx both updates the value and issues the notification

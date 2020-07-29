@@ -74,7 +74,7 @@ BLE_ES_SERVER_DEF(g_es_server);
 static ble_uuid_t g_adv_uuids[] =
 {
     /* TODO CMK 06/21/20: Fill in type dynamically during init */
-    {BLEESServer::UUID_SERVICE, BLE_UUID_TYPE_UNKNOWN},
+    {BLEESCommon::UUID_SERVICE, BLE_UUID_TYPE_UNKNOWN},
     {BLE_UUID_DEVICE_INFORMATION_SERVICE, BLE_UUID_TYPE_BLE}
 };
 BLE_ADVERTISING_DEF(g_advertising);
@@ -105,11 +105,11 @@ void init()
     g_es_server.init();
     
     ble_uuid_t uuid = {
-        .uuid = BLEESServer::UUID_SERVICE,
-        .type = g_es_server.uuid_type(),
+        .uuid = BLEESCommon::UUID_SERVICE,
+        .type = BLEESCommon::uuid_type(),
     };
     // TODO CMK  07/01/20: choose what kind of scanning based on if g_paired_addr is found
-    ble_central::set_uuid_appearance_scan_filter(uuid, BLEESServer::APPEARANCE);
+    ble_central::set_uuid_appearance_scan_filter(uuid, BLEESCommon::APPEARANCE);
 }
 
 void update_sensor_value(std::uint8_t value)

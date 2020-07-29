@@ -14,19 +14,16 @@ void BLEESClient::init(nrf_ble_gq_t *gatt_queue)
     /* Default init member variables */
     _es_hall_handle = BLE_GATT_HANDLE_INVALID;
     _es_hall_cccd_handle = BLE_GATT_HANDLE_INVALID;
-    _uuid_type = BLE_UUID_TYPE_UNKNOWN;
     _conn_handle = BLE_CONN_HANDLE_INVALID;
     _callback = {};
     _gatt_queue = gatt_queue; 
     
-    /* Add vendor specific 128-bit UUID */
-    ble_uuid128_t base_uuid = UUID_BASE;
-    APP_ERROR_CHECK(sd_ble_uuid_vs_add(&base_uuid, &_uuid_type));
+    BLEESCommon::init();
     
     /* Add custom electric skateboard service */
     ble_uuid_t uuid {
-        .uuid = UUID_SERVICE,
-        .type = _uuid_type,
+        .uuid = BLEESCommon::UUID_SERVICE,
+        .type = BLEESCommon::uuid_type(),
     };
     
     APP_ERROR_CHECK(
@@ -55,12 +52,12 @@ void BLEESClient::on_db_discovery_evt(const ble_db_discovery_evt_t *p_evt)
     switch (p_evt->evt_type) {
         case BLE_DB_DISCOVERY_COMPLETE: {
             const auto &discovered_db = p_evt->params.discovered_db;
-            if (discovered_db.srv_uuid.uuid == UUID_SERVICE && 
-                discovered_db.srv_uuid.type == _uuid_type) 
+            if (discovered_db.srv_uuid.uuid == BLEESCommon::UUID_SERVICE && 
+                discovered_db.srv_uuid.type == BLEESCommon::uuid_type()) 
             {
                 const auto &characteristics = discovered_db.charateristics;
                 for (unsigned i = 0; i < discovered_db.char_count; ++i) {
-                    if (characteristics[i].characteristic.uuid.uuid == UUID_SENSOR_CHAR) {
+                    if (characteristics[i].characteristic.uuid.uuid == BLEESCommon::UUID_SENSOR_CHAR) {
                         _es_hall_handle = characteristics[i].characteristic.handle_value;
                         _es_hall_cccd_handle = characteristics[i].cccd_handle;
                     }
@@ -91,7 +88,7 @@ void BLEESClient::subscribe_to_notifications()
             .p_ctx = nullptr
         },
         .params {
-            .gattc_write {
+            .gattc_write = {
                 .write_op = BLE_GATT_OP_WRITE_REQ,
                 .flags = BLE_GATT_EXEC_WRITE_FLAG_PREPARED_WRITE,
                 .handle = _es_hall_cccd_handle,

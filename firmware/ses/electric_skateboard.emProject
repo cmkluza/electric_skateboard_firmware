@@ -259,6 +259,8 @@
         <file file_name="../src/ble/ble_common.hpp" />
         <file file_name="../src/ble/ble_es_server.cpp" />
         <file file_name="../src/ble/ble_es_server.hpp" />
+        <file file_name="../src/ble/ble_es_common.hpp" />
+        <file file_name="../src/ble/ble_es_common.cpp" />
       </folder>
       <file file_name="../src/util.cpp" />
       <file file_name="../src/util.hpp" />
@@ -650,6 +652,8 @@
         <file file_name="../src/ble/ble_es_client.hpp" />
         <file file_name="../src/ble/ble_receiver.cpp" />
         <file file_name="../src/ble/ble_receiver.hpp" />
+        <file file_name="../src/ble/ble_es_common.hpp" />
+        <file file_name="../src/ble/ble_es_common.cpp" />
       </folder>
       <file file_name="../src/util.cpp" />
       <file file_name="../src/util.hpp" />

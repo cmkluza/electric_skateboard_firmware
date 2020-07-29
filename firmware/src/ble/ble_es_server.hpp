@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "ble_es_common.hpp"
+
 #include <cstdint>
 
 #include <app_config.h>
@@ -15,15 +17,14 @@
 #include <sdk_errors.h>
 
 class BLEESServer {
+private:
+    std::uint16_t _service_handle;                       /**< Service handle for this service (provided by BLE stack). */
+    ble_gatts_char_handles_t _sensor_char_handles;       /**< Handles for the sensor characteristic */
+    std::uint16_t _conn_handle;                          /**< Handle for the connection to the receiver */
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Types, Constants, Definitions
-////////////////////////////////////////////////////////////////////////////////////////////////////
-private:
-    std::uint16_t _service_handle;                       /**< Handle for this service (provided by BLE stack) */
-    ble_gatts_char_handles_t _sensor_char_handles;       /**< Handles for the sensor characteristic */
-    std::uint8_t _uuid_type;                             /**< UUID for this service (provided by BLE stack) */
-    std::uint16_t _conn_handle;                          /**< Handle for the connection to the receiver */
-    
+////////////////////////////////////////////////////////////////////////////////////////////////////    
 public:
     /**< Macro to define a BLE event observer */
     #define BLE_ES_SERVER_DEF(_name) \
@@ -32,31 +33,10 @@ public:
                              BLE_ES_OBSERVER_PRIO, \
                              BLEESServer::event_handler, &_name)
 
-    // TODO CMK 07/01/20: should probably move these definitions into a common header
-
-    /**< Randomly generated 128-bit UUID base for custom electric 
-         skateboard service:
-         E44D8CF2-8112-44A6-B41C-73BA7EFA957C */
-    static inline constexpr ble_uuid128_t UUID_BASE = { 
-        .uuid128 = { 0x7C, 0x95, 0xFA, 0x7E, 0xBA, 0x73, 0x1C, 0xB4,
-                     0xA6, 0x44, 0x12, 0x81, 0xF2, 0x8C, 0x4D, 0xE4 } 
-    };
-
-    /**< UUID for custom electric skateboard service. 
-         E44D0001-8112-44A6-B41C-73BA7EFA957C */
-    static inline constexpr std::uint16_t UUID_SERVICE = { 0x0001 };
-    /**< UUID for Hall effect sensor data. 
-         E44D0002-8112-44A6-B41C-73BA7EFA957C */    
-    static inline constexpr std::uint16_t UUID_SENSOR_CHAR = { 0x0002 };
-    /**< BLE appearance for the remote. */
-    // TODO CMK 07/01/20: see if there's regulations/considerations for custom appearances
-    static inline constexpr std::uint16_t APPEARANCE = { 0x1234 };
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Functions
 ////////////////////////////////////////////////////////////////////////////////////////////////////    
 public:
-    
     /**
      * Initializes this service and its characteristics.
      */
@@ -70,11 +50,6 @@ public:
      */
     void update_sensor_value(std::uint8_t new_value);
     
-    /**
-     * Gets the BLE UUID type assigned by the Nordic BLE stack.
-     */
-    std::uint8_t uuid_type() { return _uuid_type; }
-
     /**
      * BLE event handler for this service.
      *
