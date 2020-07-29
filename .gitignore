@@ -33,7 +33,9 @@
 
 # Segger Embedded Studio
 *.jlink
-remote/ses/Output
-remote/ses/source
-remote/ses/electric_skateboard_remote.emSession
+firmware/ses/Output
+firmware/ses/source
+firmware/ses/electric_skateboard.emSession
 
+# Temporary/lazy "backups"
+*.orig

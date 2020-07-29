@@ -16,8 +16,8 @@
  */
 #define MAC_FMT "%02X:%02X:%02X:%02X:%02X:%02X"
 #define MAC_ARGS(mac_byte_ptr) \
-    (mac_byte_ptr)[0], (mac_byte_ptr)[1], (mac_byte_ptr)[2], \
-    (mac_byte_ptr)[3], (mac_byte_ptr)[4], (mac_byte_ptr)[5]
+    (mac_byte_ptr)[5], (mac_byte_ptr)[4], (mac_byte_ptr)[3], \
+    (mac_byte_ptr)[2], (mac_byte_ptr)[1], (mac_byte_ptr)[0]
 
 /**
  * Macros for supressing single warnings.
@@ -35,10 +35,10 @@
 #endif
 
 namespace util {
-    
+
     /**< Length of a 16-bit UUID. */
     static inline constexpr uint32_t UUID16_LEN = { 2 };
-        
+
     /**< Length of a 128-bit UUID. */
     static inline constexpr uint32_t UUID128_LEN = { 16 };
 
@@ -63,16 +63,14 @@ namespace util {
      * Logs a 128-bit UUID.
      *
      * @param[in] uuid pointer to the UUID to be logged.
-     * @param[in] log_prefix a string that will be prepended to the log.
      */
-    void log_uuid(const ble_uuid128_t *uuid, const char *log_prefix);
+    void log_uuid(const ble_uuid128_t *uuid);
     
     /**
      * Logs a piece of advertisement data.
      *
      * @param[in] data pointer to the advertisement data.
-     * @param[in] log_prefix a string that will be prepended to each log.
      */
-    void log_ble_data(const ble_data_t *data, const char *log_prefix);
+    void log_ble_data(const ble_data_t *data);
 
 } // namespace util

@@ -1,5 +1,5 @@
 /*
- * main.cpp
+ * remote.cpp
  *
  * Main program for an electric skateboard remote controller.
  *
@@ -22,30 +22,10 @@
 #include <FreeRTOS.h>
 #include <task.h>
 
-/** BLE Notes
- *
- * Remote-Receiver Relations:
- *  - The remote shall be a BLE central. The receiver shall be a BLE peripheral.
- *  - Upon startup, the receiver:
- *      - If bonded: continuously attempts to connect (bond can be cleared w/ button hold or press)
- *      - If not bonded: advertises
- *    The remote:
- *      - If bonded: continuously attempts to connect
- *      - If not bonded: reads advertisements, looking for receivers
- *  - Upon connection, the remote starts a server to serve Hall effect sensor data to the receiver.
- *    The receiver starts a client that subscribes to the Hall effect sensor data and can update the 
- *    app when new data is available.
- *
- * Remote-Phone Relations:
- *  - To be determined
- *  - Could have remote be a BLE peripheral that phone connects to
- *  - Features could include getting date/time from phone, getting GPS/directions, firmware udpates,
- *    etc.
- */
- 
-// TODO CMK 07/03/20: implement a "delete_bonds" type function
 // TODO CMK 07/03/20: make proper electric skateboard BLE service/client
+// TODO CMK 07/03/20: implement a "delete_bonds" type function
 // TODO CMK 07/03/20: sensor simulator
+// TODO CMK 07/11/20: security
 // TODO CMK 06/24/20: power management
 // TODO CMK 07/03/20: peer manager (?)
 // TODO CMK 07/03/20: DB discovery (?)

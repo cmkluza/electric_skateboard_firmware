@@ -46,13 +46,13 @@ void enter_sleep_mode()
     APP_ERROR_CHECK(err_code);
 }
 
-void log_uuid(const ble_uuid128_t *uuid, const char *log_prefix)
+void log_uuid(const ble_uuid128_t *uuid)
 {
     /* Log format: E44D8CF2-8112-44A6-B41C-73BA7EFA957C
           # bytes:     4   - 2  - 2  - 2  -    6 
        Bytes are stored in uuid structure backwards     
      */
-    NRF_LOG_RAW_INFO("%s128-bit UUID: %02X%02X%02X%02X", log_prefix, 
+    NRF_LOG_RAW_INFO("128-bit UUID: %02X%02X%02X%02X", 
                      uuid->uuid128[15], uuid->uuid128[14], uuid->uuid128[13], uuid->uuid128[12]);
     NRF_LOG_RAW_INFO("-%02X%02X", uuid->uuid128[11], uuid->uuid128[10]);
     NRF_LOG_RAW_INFO("-%02X%02X", uuid->uuid128[9], uuid->uuid128[8]);
@@ -62,7 +62,7 @@ void log_uuid(const ble_uuid128_t *uuid, const char *log_prefix)
                      uuid->uuid128[2], uuid->uuid128[1], uuid->uuid128[0]);
 }
 
-void log_ble_data(const ble_data_t *data, const char *log_prefix)
+void log_ble_data(const ble_data_t *data)
 {
     /* Log the device name */
     uint8_t const * p_parsed_name;
@@ -77,7 +77,7 @@ void log_ble_data(const ble_data_t *data, const char *log_prefix)
     len = len < 30 ? len : 30;
     memcpy(name, name_data, len);
 
-    NRF_LOG_RAW_INFO("%sName: %s\n", log_prefix, NRF_LOG_PUSH(name));
+    NRF_LOG_RAW_INFO("Name: %s\n", NRF_LOG_PUSH(name));
     
     /* Log any 16-bit UUIDs */
     offset = { 0 };
@@ -91,7 +91,7 @@ void log_ble_data(const ble_data_t *data, const char *log_prefix)
     if (0 != offset) {
         uint8_t *uuid_data = &data->p_data[offset];
         for (uint16_t uuid_offset = 0; uuid_offset < len; uuid_offset += UUID16_LEN) {
-            NRF_LOG_RAW_INFO("%s16-bit UUID: 0x%02X%02X\n", log_prefix,
+            NRF_LOG_RAW_INFO("16-bit UUID: 0x%02X%02X\n",
                              uuid_data[uuid_offset + 1], uuid_data[uuid_offset]);
         }
     }
@@ -110,7 +110,7 @@ void log_ble_data(const ble_data_t *data, const char *log_prefix)
         ble_uuid128_t uuid;
         for (uint16_t uuid_offset = 0; uuid_offset < len; uuid_offset += UUID128_LEN) {
             memcpy(uuid.uuid128, &uuid_data[uuid_offset], UUID128_LEN);
-            log_uuid(&uuid, log_prefix);
+            log_uuid(&uuid);
         }
     }
     
@@ -119,7 +119,7 @@ void log_ble_data(const ble_data_t *data, const char *log_prefix)
     len = ble_advdata_search(data->p_data, data->len, &offset, 
                              BLE_GAP_AD_TYPE_MANUFACTURER_SPECIFIC_DATA);
     if (0 != offset) {
-        NRF_LOG_RAW_INFO("%sMFG Data: ", log_prefix);
+        NRF_LOG_RAW_INFO("MFG Data: ");
         NRF_LOG_HEXDUMP_INFO(&data->p_data[offset], len);
     }
 }
