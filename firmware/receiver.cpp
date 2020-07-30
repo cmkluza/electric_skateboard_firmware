@@ -7,12 +7,6 @@
  * Distributed under the MIT license (see LICENSE or https://opensource.org/licenses/MIT)
  */
 
-#include "ble_peripheral.hpp"
-#include "ble_receiver.hpp"
-#include "es_fds.hpp"
-#include "logger.hpp"
-#include "util.hpp"
-
 #include <app_error.h>
 #include <fds.h>
 #include <nrf_log.h>
@@ -22,8 +16,13 @@
 #include <FreeRTOS.h>
 #include <task.h>
 
-int main()
-{
+#include "ble_peripheral.hpp"
+#include "ble_receiver.hpp"
+#include "es_fds.hpp"
+#include "logger.hpp"
+#include "util.hpp"
+
+int main() {
     /* Early init */
     logger::init();
 
@@ -31,12 +30,12 @@ int main()
     util::clock_init();
 
     /* Library and module initialization */
-    // TODO CMK 07/03/20: FDS
-    //es_fds::init();
-    
+    // TODO(CMK) 07/03/20: FDS
+    // es_fds::init();
+
     /* BLE initialization */
     ble_receiver::init();
-    
+
     /* Setup the SDH thread to start scanning */
     nrf_sdh_freertos_init([](void *ignored) {
         ble_peripheral::start_advertising();
@@ -57,8 +56,7 @@ int main()
  * tasks.
  */
 extern "C"
-void vApplicationIdleHook(void)
-{
+void vApplicationIdleHook(void) {
     logger::idle();
-    // TODO CMK 06/19/20: enter power saving here?
+    // TODO(CMK) 06/19/20: enter power saving here?
 }

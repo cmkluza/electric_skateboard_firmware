@@ -14,8 +14,7 @@
 
 std::uint8_t BLEESCommon::_uuid_type;
 
-void BLEESCommon::init()
-{
+void BLEESCommon::init() {
     /* Add vendor specific 128-bit UUID */
     ble_uuid128_t base_uuid = UUID_BASE;
     APP_ERROR_CHECK(sd_ble_uuid_vs_add(&base_uuid, &_uuid_type));

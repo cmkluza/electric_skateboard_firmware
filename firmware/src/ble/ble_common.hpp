@@ -9,10 +9,6 @@
 
 #pragma once
 
-#include "ble_es_client.hpp"
-#include "ble_es_server.hpp"
-#include "util.hpp"
-
 #include <ble_advertising.h>
 #include <ble_db_discovery.h>
 #include <nrf_ble_gatt.h>
@@ -20,6 +16,10 @@
 #include <nrf_ble_scan.h>
 #include <nrf_sdh_ble.h>
 #include <sdk_errors.h>
+
+#include "ble_es_client.hpp"
+#include "ble_es_server.hpp"
+#include "util.hpp"
 
 namespace ble_common {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -31,10 +31,10 @@ SUPPRESS_WARNING_START("-Wsubobject-linkage")
 struct Config {
     /**< nRF BLE GATT instance. */
     nrf_ble_gatt_t *gatt;
-    
+
     /**< nRF GATT queue instance. */
     nrf_ble_gq_t *gatt_queue;
-    
+
     /**< nRF BLE scanner instance (central only). */
     nrf_ble_scan_t *scan;
     /**< Scan event handler (central only). */
@@ -58,4 +58,4 @@ SUPPRESS_WARNING_END()
  */
 void init(const Config &config);
 
-} // namespace ble_common
+}  // namespace ble_common

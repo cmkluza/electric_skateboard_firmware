@@ -27,22 +27,22 @@ namespace ble_peripheral {
     /**
      * Initializes BLE peripheral modules.
      *
-     * TODO CMK 06/24/20: update with specifics
+     * TODO(CMK) 06/24/20: update with specifics
      */
     void init(const ble_common::Config &config);
-    
+
     /**
      * Sets advertising data to advertise this device's name.
      */
     void advertise_name();
-    
+
     /**
      * Sets advertising data to advertise the ES service UUID and appearance.
      */
-    void advertise_uuid_appearance(ble_uuid_t &uuid);
-    
-    /** 
-      * Starts advertising. 
+    void advertise_uuid_appearance(const ble_uuid_t &uuid);
+
+    /**
+      * Starts advertising.
       */
     void start_advertising();
-} // namespace ble_peripheral
+}  // namespace ble_peripheral

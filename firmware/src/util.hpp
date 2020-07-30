@@ -7,11 +7,11 @@
 
 #pragma once
 
-#include "app_config.h"
-
 #include <ble_types.h>
 
 #include <cstdint>
+
+#include "config/app_config.h"
 
 /**
  * Macros for printing 6-byte MAC addresses.
@@ -37,42 +37,33 @@
 #endif
 
 namespace util {
-
     /**< Length of a 16-bit UUID. */
     static inline constexpr std::uint32_t UUID16_LEN = { 2 };
 
     /**< Length of a 128-bit UUID. */
     static inline constexpr std::uint32_t UUID128_LEN = { 16 };
 
-    /** 
+    /**
      * Function for initializing the clock.
      */
     void clock_init();
-    
+
     /**
      * Enables deep sleep instead of regular sleep in the SCB.
      */
     void enable_deep_sleep();
 
     /**
-     * Function for putting the chip into sleep mode.
-     *
-     * @note This function will not return.
-     */
-    void enter_sleep_mode();
-    
-    /**
      * Logs a 128-bit UUID.
      *
      * @param[in] uuid pointer to the UUID to be logged.
      */
     void log_uuid(const ble_uuid128_t *uuid);
-    
+
     /**
      * Logs a piece of advertisement data.
      *
      * @param[in] data pointer to the advertisement data.
      */
     void log_ble_data(const ble_data_t *data);
-
-} // namespace util
+}  // namespace util

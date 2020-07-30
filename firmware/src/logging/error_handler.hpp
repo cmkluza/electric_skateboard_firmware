@@ -8,5 +8,5 @@
 #pragma once
 
 namespace error_handler {
-    
-}
+
+}  // namespace error_handler

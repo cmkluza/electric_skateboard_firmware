@@ -6,14 +6,12 @@
  * Copyright (c) 2020 Cameron Kluza
  * Distributed under the MIT license (see LICENSE or https://opensource.org/licenses/MIT)
  */
- 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Includes
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "ble_common.hpp"
-
-#include <app_config.h>
 
 #include <nrf_sdh.h>
 #include <nrf_sdh_ble.h>
@@ -21,6 +19,8 @@
 #include <peer_manager_handler.h>
 
 #include <cstdint>
+
+#include "config/app_config.h"
 
 namespace ble_common {
 
@@ -45,18 +45,17 @@ static bool g_initialized { false };
 // Public Implementations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// TODO CMK 07/03/20: init peer_manager (?)
-void init(const Config &config)
-{
+// TODO(CMK) 07/03/20: init peer_manager (?)
+void init(const Config &config) {
     if (g_initialized) {
         return;
     }
-    
+
     ble_stack_init();
-    
-    // TODO CMK 06/19/20: GATT event handler (?)
+
+    // TODO(CMK) 06/19/20: GATT event handler (?)
     APP_ERROR_CHECK(nrf_ble_gatt_init(config.gatt, nullptr));
-    
+
     g_initialized = true;
 }
 
@@ -64,8 +63,7 @@ void init(const Config &config)
 // Internal Implementations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-static void ble_stack_init()
-{
+static void ble_stack_init() {
     APP_ERROR_CHECK(nrf_sdh_enable_request());
 
     std::uint32_t ram_start = {};
@@ -74,8 +72,7 @@ static void ble_stack_init()
     APP_ERROR_CHECK(nrf_sdh_ble_enable(&ram_start));
 }
 
-static void peer_manager_init()
-{
+static void peer_manager_init() {
     ble_gap_sec_params_t sec_param;
     ret_code_t           err_code;
 
@@ -100,8 +97,8 @@ static void peer_manager_init()
     err_code = pm_sec_params_set(&sec_param);
     APP_ERROR_CHECK(err_code);
 
-    // TODO CMK 06/19/20: event handler
+    // TODO(CMK) 06/19/20: event handler
     APP_ERROR_CHECK(pm_register(nullptr));
 }
 
-} // namespace ble_common
+}  // namespace ble_common

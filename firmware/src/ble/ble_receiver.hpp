@@ -10,15 +10,15 @@
 #pragma once
 
 namespace ble_receiver {
-    
+
     /**
      * Initializes the BLE stack and starts advertising.
      */
     void init();
-    
+
     /**
-     * 
+     *
      */
-    
-        
-}; // namespace ble_receiver
+
+
+}  // namespace ble_receiver

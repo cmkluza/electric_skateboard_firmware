@@ -11,7 +11,7 @@
  */
 
 #pragma once
- 
+
 #include "ble_common.hpp"
 
 #include <ble_gap.h>
@@ -19,27 +19,27 @@
 #include <sdk_errors.h>
 
 #include <cstdint>
- 
+
 namespace ble_central {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Functions
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-     
+
     /**
      * Initializes BLE central modules.
      *
      * TODO CMK 06/24/20: update with specifics
      */
     void init(const ble_common::Config &config);
-    
+
     /**
      * Sets the filter for the scanning module.
      *
      * @param[in] addr reference to the BLE address to filter for.
      */
     void set_addr_scan_filter(const ble_gap_addr_t &addr);
-    
+
     /**
      * Sets the filter for the scanning module.
      *
@@ -47,10 +47,10 @@ namespace ble_central {
      * @param[in] appearance the BLE appearance to filter for.
      */
     void set_uuid_appearance_scan_filter(const ble_uuid_t &uuid, std::uint16_t appearance);
-    
+
     /**
      * Begins scanning for BLE devices.
      */
     void begin_scanning();
-    
-} // namespace ble_central
+
+}  // namespace ble_central

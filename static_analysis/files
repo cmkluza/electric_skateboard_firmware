@@ -1,0 +1,13 @@
+../firmware/src/ble/ble_central.cpp
+../firmware/src/ble/ble_common.cpp
+../firmware/src/ble/ble_es_client.cpp
+../firmware/src/ble/ble_es_server.cpp
+../firmware/src/ble/ble_peripheral.cpp
+../firmware/src/ble/ble_receiver.cpp
+../firmware/src/ble/ble_remote.cpp
+../firmware/src/library_wrappers/es_fds.cpp
+../firmware/src/logging/error_handler.cpp
+../firmware/src/logging/logger.cpp
+../firmware/src/util.cpp
+../firmware/receiver.cpp
+../firmware/remote.cpp

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#
+# Generates files for the cppcheck runner
+#
+
+# The "files" list: one filename per line
+find ../firmware/src/ -iname '*.cpp' > files
+echo "../firmware/receiver.cpp" >> files
+echo "../firmware/remote.cpp" >> files

@@ -9,23 +9,26 @@
 
 #include "ble_es_common.hpp"
 
-#include <cstdint>
-
 #include <app_config.h>
 #include <ble_types.h>
 #include <nrf_sdh_ble.h>
 #include <sdk_errors.h>
 
+#include <cstdint>
+
 class BLEESServer {
-private:
-    std::uint16_t _service_handle;                       /**< Service handle for this service (provided by BLE stack). */
-    ble_gatts_char_handles_t _sensor_char_handles;       /**< Handles for the sensor characteristic */
-    std::uint16_t _conn_handle;                          /**< Handle for the connection to the receiver */
+ private:
+    /**< Service handle for this service (provided by BLE stack). */
+    std::uint16_t _service_handle;
+    /**< Handles for the sensor characteristic */
+    ble_gatts_char_handles_t _sensor_char_handles;
+    /**< Handle for the connection to the receiver */
+    std::uint16_t _conn_handle;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Types, Constants, Definitions
-////////////////////////////////////////////////////////////////////////////////////////////////////    
-public:
+////////////////////////////////////////////////////////////////////////////////////////////////////
+ public:
     /**< Macro to define a BLE event observer */
     #define BLE_ES_SERVER_DEF(_name) \
         static BLEESServer _name; \
@@ -35,21 +38,21 @@ public:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Functions
-////////////////////////////////////////////////////////////////////////////////////////////////////    
-public:
+////////////////////////////////////////////////////////////////////////////////////////////////////
+ public:
     /**
      * Initializes this service and its characteristics.
      */
     void init();
-    
-    // TODO CMK 06/22/20: verify sensor data type
+
+    // TODO(CMK) 06/22/20: verify sensor data type
     /**
      * Update the sensor value.
      *
      * @param TODO
      */
     void update_sensor_value(std::uint8_t new_value);
-    
+
     /**
      * BLE event handler for this service.
      *
@@ -58,4 +61,10 @@ public:
      */
     static void event_handler(ble_evt_t const *p_ble_evt, void *p_context);
 
-}; // class BLEESServer
+ private:
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Constructors and Destructors
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    BLEESServer() = delete;
+    ~BLEESServer() = delete;
+};  // class BLEESServer

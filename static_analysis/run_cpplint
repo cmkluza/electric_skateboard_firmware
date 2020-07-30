@@ -1,0 +1,11 @@
+#!/bin/bash
+
+#
+# cpplint runner
+#
+
+cpplint --linelength=120 \
+        --counting=detailed \
+        `find ../firmware/src -iname '*.[ch]pp'` \
+        ../firmware/receiver.cpp \
+        ../firmware/remote.cpp

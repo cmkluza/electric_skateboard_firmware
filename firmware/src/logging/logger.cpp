@@ -28,8 +28,7 @@ static TaskHandle_t logger_thandle;
  * This thread is responsible for processing log entries if logs are deferred.
  * Thread flushes all log entries and suspends. It is resumed by idle task hook.
  */
-static void logger_thread(void *arg)
-{
+static void logger_thread(void *arg) {
     UNUSED_PARAMETER(arg);
 
     while (true) {
@@ -38,31 +37,28 @@ static void logger_thread(void *arg)
     }
 }
 
-void init()
-{
-    // TODO CMK 06/19/20: timestamp function
+void init() {
+    // TODO(CMK) 06/19/20: timestamp function
     APP_ERROR_CHECK(NRF_LOG_INIT(NULL));
 
     NRF_LOG_DEFAULT_BACKENDS_INIT();
-    
-    // TODO CMK 06/18/20: logger flash backend
-    
-    if (pdPASS != xTaskCreate(logger_thread, "Logger", 256, NULL, 1, &logger_thandle))
-    {
+
+    // TODO(CMK) 06/18/20: logger flash backend
+
+    if (pdPASS != xTaskCreate(logger_thread, "Logger", 256, NULL, 1, &logger_thandle)) {
         APP_ERROR_HANDLER(NRF_ERROR_NO_MEM);
     }
 }
 
-void idle()
-{
+void idle() {
      vTaskResume(logger_thandle);
 }
 
-#else // !NRF_LOG_ENABLED
+#else  // !NRF_LOG_ENABLED
 
 void init() {}
 void idle() {}
 
-#endif // NRF_LOG_ENABLED
+#endif  // NRF_LOG_ENABLED
 
-} // namespace logger
+}  // namespace logger

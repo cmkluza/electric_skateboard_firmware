@@ -7,11 +7,6 @@
  * Distributed under the MIT license (see LICENSE or https://opensource.org/licenses/MIT)
  */
 
-#include "ble_central.hpp"
-#include "ble_remote.hpp"
-#include "es_fds.hpp"
-#include "logger.hpp"
-#include "util.hpp"
 
 #include <app_error.h>
 #include <fds.h>
@@ -19,11 +14,24 @@
 #include <nrf_sdh_freertos.h>
 #include <sdk_errors.h>
 
+#include <sensorsim.h>
+
 #include <FreeRTOS.h>
 #include <task.h>
 
-int main()
-{
+#include "ble_central.hpp"
+#include "ble_remote.hpp"
+#include "es_fds.hpp"
+#include "logger.hpp"
+#include "util.hpp"
+
+// TODO(CMK) 07/28/20: remove, debugging
+static void sensorsim_init();
+static sensorsim_cfg_t sim_cfg;
+static sensorsim_state_t sim_state;
+static void update_sensor_value();
+
+int main() {
     /* Early init */
     logger::init();
 
@@ -31,12 +39,11 @@ int main()
     util::clock_init();
 
     /* Library and module initialization */
-    // TODO CMK 07/03/20: FDS
-    //es_fds::init();
-    
+    // TODO(CMK) 07/03/20: FDS
+
     /* BLE initialization */
     ble_remote::init();
-    
+
     /* Setup the SDH thread to start scanning */
     nrf_sdh_freertos_init([](void *ignored) {
         ble_central::begin_scanning();
@@ -57,8 +64,21 @@ int main()
  * tasks.
  */
 extern "C"
-void vApplicationIdleHook(void)
-{
+void vApplicationIdleHook(void) {
     logger::idle();
-    // TODO CMK 06/19/20: enter power saving here?
+    // TODO(CMK) 06/19/20: enter power saving here?
+}
+
+static void sensorsim_init() {
+    sim_cfg.min          = 1;
+    sim_cfg.max          = 100;
+    sim_cfg.incr         = 1;
+    sim_cfg.start_at_max = true;
+
+    sensorsim_init(&sim_state, &sim_cfg);
+}
+
+static void update_sensor_value() {
+    std::uint8_t sensor_value = sensorsim_measure(&sim_state, &sim_cfg);
+    ble_remote::update_sensor_value(sensor_value);
 }

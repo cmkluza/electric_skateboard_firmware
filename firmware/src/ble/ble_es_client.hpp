@@ -16,25 +16,30 @@
 
 #include <cstdint>
 
-// TODO CMK 07/27/20: delete constructors where applicable (e.g. here where global instances are defined)
+// TODO(CMK) 07/27/20: delete constructors where applicable
+//  (e.g. here where global instances are defined)
 
 class BLEESClient {
     /**< Callback for when sensor data comes in */
-    // TODO CMK 06/22/20: verify data type for sensor data
+    // TODO(CMK) 06/22/20: verify data type for sensor data
     using SensorCallback = void (*)(std::uint8_t);
 
-private:
-    /* Handles to relevant characteristics on the server */
-    std::uint16_t _es_hall_handle;      /**< Handle to ES server's Hall sensor char. */
-    std::uint16_t _es_hall_cccd_handle; /**< Handle to ES server's Hall sensor CCCD. */
-    std::uint16_t _conn_handle;         /**< Connection handle to the remote. */
-    SensorCallback _callback;           /**< Callback for when new sensor data comes in. */
-    nrf_ble_gq_t *_gatt_queue;          /**< Pointer to GATT queue instance. */
-    
+ private:
+    /**< Handle to ES server's Hall sensor char. */
+    std::uint16_t _es_hall_handle;
+    /**< Handle to ES server's Hall sensor CCCD. */
+    std::uint16_t _es_hall_cccd_handle;
+    /**< Connection handle to the remote. */
+    std::uint16_t _conn_handle;
+    /**< Callback for when new sensor data comes in. */
+    SensorCallback _callback;
+    /**< Pointer to GATT queue instance. */
+    nrf_ble_gq_t *_gatt_queue;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Types, Constants, Definitions
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-public:
+ public:
     /** Macro to define a BLE event observer */
     #define BLE_ES_CLIENT_DEF(_name) \
     static BLEESClient _name; \
@@ -42,23 +47,20 @@ public:
                          BLE_ES_OBSERVER_PRIO, \
                          BLEESClient::event_handler, &_name)
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Functions
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-public:
-
+ public:
     /**
      * Initializes this service.
      */
     void init(nrf_ble_gq_t *gatt_queue);
-    
-    // TODO CMK 07/27/20: subscribe and handle notifications
+
+    // TODO(CMK) 07/27/20: subscribe and handle notifications
     /**
      * Register an application callback for sensor data notifications.
      */
-    void register_sensor_data_callback(SensorCallback callback)
-    {
+    void register_sensor_data_callback(SensorCallback callback) {
         _callback = callback;
     }
 
@@ -71,10 +73,16 @@ public:
      * BLE event handler for this service.
      */
     static void event_handler(ble_evt_t const *p_ble_evt, void *p_context);
-    
-private:
+
+ private:
     /**
      * Subscribes to notifications from the remote upon DB discovery completion.
      */
     void subscribe_to_notifications();
-}; // class BLEESClient
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Constructors and Destructors
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    BLEESClient() = delete;
+    ~BLEESClient() = delete;
+};  // class BLEESClient

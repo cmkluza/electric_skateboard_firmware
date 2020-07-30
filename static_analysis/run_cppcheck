@@ -1,0 +1,22 @@
+#!/bin/bash
+
+#
+# cppcheck runner
+#
+
+#
+# Options to fine-tune:
+# --library=<cfg>: need/want to add library configs, e.g. for some nRF functions?
+# --max-ctu-depth=N: potentially increase for more "serious" checks?
+# --output-file=<file>: could be better to read than going through stderr
+# --project=<file>: could be useful to generate a compile_commands.json, but
+#                   would be exceedingly annoying while using SES's build system
+#
+
+cppcheck    --addon=cert \
+            --enable=all \
+            --file-list='files' \
+            --includes-file='includes' \
+            -j 8 \
+            --platform=unix32 \
+            --suppressions-list='suppressions'

@@ -28,7 +28,7 @@ static bool g_is_initialized { false };
 // Internal Prototypes
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/** 
+/**
  * Event handler for FDS events.
  *
  * @param[in] p_evt pointer to structure containing context and status for the event.
@@ -38,18 +38,16 @@ static void event_handler(fds_evt_t const *p_evt);
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Implementations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void init()
-{
+void init() {
     APP_ERROR_CHECK(fds_register(event_handler));
     APP_ERROR_CHECK(fds_init());
-    
+
     while (!g_is_initialized) {
         /* Await initialization success */
     }
 }
 
-bool record_is_present(std::uint16_t file_id, std::uint16_t record_key, fds_record_desc_t *p_desc)
-{
+bool record_is_present(std::uint16_t file_id, std::uint16_t record_key, fds_record_desc_t *p_desc) {
     fds_find_token_t tok = {};
 
     auto ret_code = fds_record_find(file_id, record_key, p_desc, &tok);
@@ -61,46 +59,43 @@ bool record_is_present(std::uint16_t file_id, std::uint16_t record_key, fds_reco
         default:
             APP_ERROR_HANDLER(ret_code);
     }
-        
+
     return false;
 }
 
-ret_code_t read_record(fds_record_desc_t *desc, std::uint8_t *buffer, size_t buffer_len)
-{
+ret_code_t read_record(fds_record_desc_t *desc, std::uint8_t *buffer, size_t buffer_len) {
     fds_flash_record_t config = {};
-        
+
     if (auto ret_code = fds_record_open(desc, &config); ret_code != NRF_SUCCESS) {
-        NRF_LOG_WARNING("%s::fds_record_open failed: %s", 
+        NRF_LOG_WARNING("%s::fds_record_open failed: %s",
             __FILE__, __func__, nrf_strerror_get(ret_code));
         return ret_code;
     }
-    
+
     memcpy(buffer, config.p_data, buffer_len);
 
     if (auto ret_code = fds_record_close(desc); ret_code != NRF_SUCCESS) {
-        NRF_LOG_WARNING("%s::fds_record_close failed: %s", 
+        NRF_LOG_WARNING("%s::fds_record_close failed: %s",
             __FILE__, __func__, nrf_strerror_get(ret_code));
         return ret_code;
     }
-    
+
     return NRF_SUCCESS;
 }
 
-void idle()
-{
-    // TODO CMK 06/29/20: implement garbage collection
+void idle() {
+    // TODO(CMK) 06/29/20: implement garbage collection
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Internal Implementations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-static void event_handler(fds_evt_t const *p_evt)
-{
+static void event_handler(fds_evt_t const *p_evt) {
     if (NRF_SUCCESS == p_evt->result) {
         NRF_LOG_INFO("%s successful event: %d", __FILE__, p_evt->id);
     } else {
-        NRF_LOG_WARNING("%s unsuccessful event: %d %s", 
+        NRF_LOG_WARNING("%s unsuccessful event: %d %s",
             __FILE__, p_evt->id, nrf_strerror_get(p_evt->result));
     }
 
@@ -112,22 +107,22 @@ static void event_handler(fds_evt_t const *p_evt)
                 APP_ERROR_HANDLER(p_evt->result);
             }
             break;
-         
+
         case FDS_EVT_WRITE:
             break;
-            
+
         case FDS_EVT_UPDATE:
             break;
-        
+
         case FDS_EVT_DEL_RECORD:
             break;
-    
+
         case FDS_EVT_DEL_FILE:
             break;
-            
+
         case FDS_EVT_GC:
             break;
     }
 }
 
-} // namespace es_fds
+}  // namespace es_fds
