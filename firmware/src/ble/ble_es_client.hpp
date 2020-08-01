@@ -16,11 +16,8 @@
 
 #include <cstdint>
 
-// TODO(CMK) 07/27/20: delete constructors where applicable
-//  (e.g. here where global instances are defined)
-
 class BLEESClient {
-    /**< Callback for when sensor data comes in */
+    /**< Callback for when sensor data comes in. */
     // TODO(CMK) 06/22/20: verify data type for sensor data
     using SensorCallback = void (*)(std::uint8_t);
 
@@ -37,10 +34,10 @@ class BLEESClient {
     nrf_ble_gq_t *_gatt_queue;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Types, Constants, Definitions
+// Definitions
 ////////////////////////////////////////////////////////////////////////////////////////////////////
  public:
-    /** Macro to define a BLE event observer */
+    /** Macro to define a BLE event observer. */
     #define BLE_ES_CLIENT_DEF(_name) \
     static BLEESClient _name; \
     NRF_SDH_BLE_OBSERVER(_name ## _obs, \
@@ -48,17 +45,29 @@ class BLEESClient {
                          BLEESClient::event_handler, &_name)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Functions
+// Constructors
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    BLEESClient() : _es_hall_handle { },
+                    _es_hall_cccd_handle { },
+                    _conn_handle { BLE_CONN_HANDLE_INVALID },
+                    _callback { },
+                    _gatt_queue { } {}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Public Functions
 ////////////////////////////////////////////////////////////////////////////////////////////////////
  public:
     /**
      * Initializes this service.
+     *
+     * @param[in] gatt_queue pointer to a GATT queue instance used by this module.
      */
     void init(nrf_ble_gq_t *gatt_queue);
 
-    // TODO(CMK) 07/27/20: subscribe and handle notifications
     /**
      * Register an application callback for sensor data notifications.
+     *
+     * @param[in] callback the function to be called when sensor data is received.
      */
     void register_sensor_data_callback(SensorCallback callback) {
         _callback = callback;
@@ -66,23 +75,25 @@ class BLEESClient {
 
     /**
      * Callback for DB discovery events.
+     *
+     * @param[in] p_evt the DB discovery event.
      */
     void on_db_discovery_evt(const ble_db_discovery_evt_t *p_evt);
 
     /**
      * BLE event handler for this service.
+     *
+     * @param[in] p_ble_evt the BLE event.
+     * @param[in] p_context context passed when this handler is registered (pointer to "this").
      */
     static void event_handler(ble_evt_t const *p_ble_evt, void *p_context);
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Private Functions
+////////////////////////////////////////////////////////////////////////////////////////////////////
  private:
     /**
-     * Subscribes to notifications from the remote upon DB discovery completion.
+     * Subscribes to notifications from the ES server upon DB discovery completion.
      */
     void subscribe_to_notifications();
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// Constructors and Destructors
-////////////////////////////////////////////////////////////////////////////////////////////////////
-    BLEESClient() = delete;
-    ~BLEESClient() = delete;
 };  // class BLEESClient

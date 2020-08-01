@@ -70,25 +70,25 @@
 #define BLE_PERIPHERAL_MANUFACTURER_NAME "N/A"
 
 /**< The advertising interval. */
-#define BLE_PERIPHERAL_ADV_INTERVAL MSEC_TO_UNITS(187.5, UNIT_0_625_MS)
+#define BLE_PERIPHERAL_ADV_INTERVAL ((uint32_t) MSEC_TO_UNITS(187.5, UNIT_0_625_MS))
 
 /**< The advertising duration. */
-#define BLE_PERIPHERAL_ADV_DURATION MSEC_TO_UNITS(180000, UNIT_10_MS)
+#define BLE_PERIPHERAL_ADV_DURATION ((uint32_t) MSEC_TO_UNITS(180000, UNIT_10_MS))
 
 /**< Minimum acceptable connection interval (0.4 seconds). */
-#define BLE_PERIPHERAL_MIN_CONN_INTERVAL MSEC_TO_UNITS(400, UNIT_1_25_MS)
+#define BLE_PERIPHERAL_MIN_CONN_INTERVAL ((uint32_t) MSEC_TO_UNITS(400, UNIT_1_25_MS))
 
 /**< Maximum acceptable connection interval (0.65 second). */
-#define BLE_PERIPHERAL_MAX_CONN_INTERVAL MSEC_TO_UNITS(650, UNIT_1_25_MS)
+#define BLE_PERIPHERAL_MAX_CONN_INTERVAL ((uint32_t) MSEC_TO_UNITS(650, UNIT_1_25_MS))
 
 /**< Slave latency. */
 #define BLE_PERIPHERAL_SLAVE_LATENCY 0
 
 /**< Connection supervisory time-out. */
-#define BLE_PERIPHERAL_CONN_SUP_TIMEOUT MSEC_TO_UNITS(4000, UNIT_10_MS)
+#define BLE_PERIPHERAL_CONN_SUP_TIMEOUT ((uint32_t) MSEC_TO_UNITS(4000, UNIT_10_MS))
 
 /**< Time from initiating event (connect or start of notification) to first time sd_ble_gap_conn_param_update is called (5 seconds). */
-#define BLE_PERIPHERAL_FIRST_CONN_PARAMS_UPDATE_DELAY 5000 
+#define BLE_PERIPHERAL_FIRST_CONN_PARAMS_UPDATE_DELAY 5000
 
 /**< Time between each call to sd_ble_gap_conn_param_update after the first call (30 seconds). */
 #define BLE_PERIPHERAL_NEXT_CONN_PARAMS_UPDATE_DELAY 30000
@@ -101,22 +101,22 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**< Scan interval. */
-#define BLE_CENTRAL_SCAN_INTERVAL MSEC_TO_UNITS(100, UNIT_0_625_MS)
+#define BLE_CENTRAL_SCAN_INTERVAL ((uint32_t) MSEC_TO_UNITS(100, UNIT_0_625_MS))
 
 /**< Scan window. */
-#define BLE_CENTRAL_SCAN_WINDOW MSEC_TO_UNITS(50, UNIT_0_625_MS)
+#define BLE_CENTRAL_SCAN_WINDOW ((uint32_t) MSEC_TO_UNITS(50, UNIT_0_625_MS))
 
 /**< Minimum connection interval. */
-#define BLE_CENTRAL_MIN_CONN_INTERVAL MSEC_TO_UNITS(7.5, UNIT_1_25_MS)
+#define BLE_CENTRAL_MIN_CONN_INTERVAL ((uint32_t) MSEC_TO_UNITS(7.5, UNIT_1_25_MS))
 
 /**< Maximum connection interval */
-#define BLE_CENTRAL_MAX_CONN_INTERVAL MSEC_TO_UNITS(30, UNIT_1_25_MS)
+#define BLE_CENTRAL_MAX_CONN_INTERVAL ((uint32_t) MSEC_TO_UNITS(30, UNIT_1_25_MS))
 
 /**< Slave latency. */
 #define BLE_CENTRAL_SLAVE_LATENCY 0
 
 /**< Supervision timeout. */
-#define BLE_CENTRAL_SUPERVISION_TIMEOUT MSEC_TO_UNITS(4000, UNIT_10_MS)
+#define BLE_CENTRAL_SUPERVISION_TIMEOUT ((uint32_t) MSEC_TO_UNITS(4000, UNIT_10_MS))
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Logger Definitions
@@ -130,7 +130,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**< Which pin the UART logger should transmit on - uses board-specific definition */
-#ifndef NRF_LOG_BACKEND_UART_TX_PIN 
+#ifndef NRF_LOG_BACKEND_UART_TX_PIN
 #define NRF_LOG_BACKEND_UART_TX_PIN TX_PIN_NUMBER
 #endif
 

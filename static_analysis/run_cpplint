@@ -4,8 +4,22 @@
 # cpplint runner
 #
 
-cpplint --linelength=120 \
+#
+# Even though my copyrights are copy-pasted between files, cpplint flags
+# ble_peripheral.cpp,hpp with legal/copyright. So for now, these are processed
+# separately with that option explicitly disabled.
+#
+
+cpplint --linelength=100 \
         --counting=detailed \
+        --exclude=../firmware/src/ble/ble_peripheral.cpp \
+        --exclude=../firmware/src/ble/ble_peripheral.hpp \
         `find ../firmware/src -iname '*.[ch]pp'` \
         ../firmware/receiver.cpp \
         ../firmware/remote.cpp
+
+cpplint --linelength=100 \
+        --counting=detailed \
+        --filter=-legal/copyright \
+        ../firmware/src/ble/ble_peripheral.cpp \
+        ../firmware/src/ble/ble_peripheral.hpp

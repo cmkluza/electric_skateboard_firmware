@@ -7,10 +7,6 @@
  * Distributed under the MIT license (see LICENSE or https://opensource.org/licenses/MIT)
  */
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// Includes
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
 #include "ble_common.hpp"
 
 #include <nrf_sdh.h>
@@ -25,17 +21,17 @@
 namespace ble_common {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Internal Prototypes
+// Private Prototypes
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /** Configures and initializes the SoftDevice. */
 static void ble_stack_init();
 
-/** Function for the Peer Manager initialization. */
+/** Configures and initializes the peer manager (for handling security). */
 static void peer_manager_init();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Internal Data
+// Private Data
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**< Whether or not the common BLE init has already taken place. */
@@ -45,8 +41,7 @@ static bool g_initialized { false };
 // Public Implementations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// TODO(CMK) 07/03/20: init peer_manager (?)
-void init(const Config &config) {
+void init(const Data &data) {
     if (g_initialized) {
         return;
     }
@@ -54,13 +49,13 @@ void init(const Config &config) {
     ble_stack_init();
 
     // TODO(CMK) 06/19/20: GATT event handler (?)
-    APP_ERROR_CHECK(nrf_ble_gatt_init(config.gatt, nullptr));
+    APP_ERROR_CHECK(nrf_ble_gatt_init(data.gatt, nullptr));
 
     g_initialized = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Internal Implementations
+// Private Implementations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 static void ble_stack_init() {
@@ -72,6 +67,7 @@ static void ble_stack_init() {
     APP_ERROR_CHECK(nrf_sdh_ble_enable(&ram_start));
 }
 
+// TODO(CMK) 07/31/20: implement
 static void peer_manager_init() {
     ble_gap_sec_params_t sec_param;
     ret_code_t           err_code;

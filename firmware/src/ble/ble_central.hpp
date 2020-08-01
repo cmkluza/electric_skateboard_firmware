@@ -23,27 +23,27 @@
 namespace ble_central {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Functions
+// Public Functions
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Initializes BLE central modules.
+     * Performs common BLE initialization and initializes BLE scanning.
      *
-     * TODO CMK 06/24/20: update with specifics
+     * @param[in] data struct containing pointers to instances of Nordic BLE modules.
      */
-    void init(const ble_common::Config &config);
+    void init(const ble_common::Data &data);
 
     /**
      * Sets the filter for the scanning module.
      *
-     * @param[in] addr reference to the BLE address to filter for.
+     * @param[in] addr the BLE address to filter for.
      */
     void set_addr_scan_filter(const ble_gap_addr_t &addr);
 
     /**
      * Sets the filter for the scanning module.
      *
-     * @param[in] uuid reference to the BLE UUID to filter for.
+     * @param[in] uuid       the BLE UUID to filter for.
      * @param[in] appearance the BLE appearance to filter for.
      */
     void set_uuid_appearance_scan_filter(const ble_uuid_t &uuid, std::uint16_t appearance);

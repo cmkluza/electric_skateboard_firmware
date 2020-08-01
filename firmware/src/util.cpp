@@ -17,6 +17,9 @@
 #include <sdk_errors.h>
 
 namespace util {
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Public Implementations
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void clock_init() {
     if (!nrf_drv_clock_init_check()) {
@@ -58,7 +61,7 @@ void log_ble_data(const ble_data_t *data) {
     NRF_LOG_RAW_INFO("Name: %s\n", NRF_LOG_PUSH(name));
 
     /* Log any 16-bit UUIDs */
-    offset = { 0 };
+    offset = {};
     len = ble_advdata_search(data->p_data, data->len, &offset,
                              BLE_GAP_AD_TYPE_16BIT_SERVICE_UUID_COMPLETE);
     if (0 == offset) {  // check for other UUIDs
@@ -75,7 +78,7 @@ void log_ble_data(const ble_data_t *data) {
     }
 
     /* Log any 128-bit UUIDs */
-    offset = { 0 };
+    offset = {};
     len = ble_advdata_search(data->p_data, data->len, &offset,
                              BLE_GAP_AD_TYPE_128BIT_SERVICE_UUID_COMPLETE);
     if (0 == offset) {  // check for other UUIDs
@@ -93,7 +96,7 @@ void log_ble_data(const ble_data_t *data) {
     }
 
     /* Log MFG data */
-    offset = { 0 };
+    offset = {};
     len = ble_advdata_search(data->p_data, data->len, &offset,
                              BLE_GAP_AD_TYPE_MANUFACTURER_SPECIFIC_DATA);
     if (0 != offset) {

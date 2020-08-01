@@ -7,10 +7,6 @@
  * Distributed under the MIT license (see LICENSE or https://opensource.org/licenses/MIT)
  */
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// Includes
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
 #include "ble_receiver.hpp"
 
 #include <ble_db_discovery.h>
@@ -23,42 +19,52 @@
 
 #include <cstring>
 
-#include "ble_peripheral.hpp"
 #include "ble_common.hpp"
-#include "ble_es_server.hpp"
+#include "ble_es_client.hpp"
+#include "ble_peripheral.hpp"
+#include "config/app_config.h"
 #include "es_fds.hpp"
 #include "util.hpp"
-
-#include "config/app_config.h"
 
 namespace ble_receiver {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Internal Prototypes
+// Private Prototypes
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * Checks FDS to see if a paired address is stored, and reads it into g_paired_addr if so.
- */
+/** Checks FDS to see if a paired address is stored, and reads it into g_paired_addr if so. */
 static void init_paired_addr();
 
-/** BLE event handler. */
+/**
+ * BLE event handler.
+ *
+ * @param[in] p_ble_evt the BLE event.
+ * @param[in] p_context context passed when this handler is registered (nullptr)
+ */
 static void ble_event_handler(ble_evt_t const *p_ble_evt, void *p_context);
 
-/** DB discovery event handler. */
+/**
+ * DB discovery event handler.
+ *
+ * @param[in] p_evt the DB discovery event.
+ */
 static void db_discovery_evt_handler(ble_db_discovery_evt_t *p_evt);
 
-/** Sensor data callback
-    TODO(CMK) 07/28/20: move this into a separate sensor module? */
+/**
+ * Sensor data callback.
+ *
+ * @param[in] sensor_data the new sensor data.
+ */
+// TODO(CMK) 07/28/20: move this into a separate sensor module?
 static void sensor_data_callback(std::uint8_t sensor_data);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Internal Data
+// Private Data
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // TODO(CMK) 07/27/20: remove unused variables
 
-/** Register common BLE event handler. */
+/**< Register common BLE event handler. */
 NRF_SDH_BLE_OBSERVER(g_ble_observer, BLE_COMMON_OBSERVER_PRIO,
                      ble_event_handler, nullptr);
 
@@ -76,8 +82,10 @@ NRF_BLE_GQ_DEF(g_gatt_queue,
 /**< Custom electric skateboard client instance. */
 BLE_ES_CLIENT_DEF(g_es_client);
 
+/**< nRF advertising module instance. */
 BLE_ADVERTISING_DEF(g_advertising);
 
+/**< nRF DB discovery module instance. */
 BLE_DB_DISCOVERY_DEF(g_db_discovery);
 
 /**< The BLE address of the paired receiver. Set to 0 when no receiver is paired. */
@@ -88,7 +96,7 @@ static ble_gap_addr_t g_paired_addr;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void init() {
-    auto config = ble_common::Config {
+    auto data = ble_common::Data {
         .gatt                   = &g_gatt,
         .gatt_queue             = &g_gatt_queue,
         .scan                   = nullptr,
@@ -98,7 +106,7 @@ void init() {
         .db_discovery_handler   = &db_discovery_evt_handler,
     };
 
-    ble_peripheral::init(config);
+    ble_peripheral::init(data);
 
     init_paired_addr();
 
@@ -106,16 +114,16 @@ void init() {
     g_es_client.register_sensor_data_callback(sensor_data_callback);
 
     ble_uuid_t uuid {
-        .uuid = BLEESCommon::UUID_SERVICE,
-        .type = BLEESCommon::uuid_type(),
+        .uuid = ble_es_common::UUID_SERVICE,
+        .type = ble_es_common::uuid_type(),
     };
 
     // TODO(CMK) 07/27/20: choose what kind of advertising based on if g_paired_addr is found
-    ble_peripheral::advertise_uuid_appearance(uuid);
+    ble_peripheral::advertise_uuid_appearance(&uuid);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Internal Implementations
+// Private Implementations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 static void init_paired_addr() {

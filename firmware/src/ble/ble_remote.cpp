@@ -7,10 +7,6 @@
  * Distributed under the MIT license (see LICENSE or https://opensource.org/licenses/MIT)
  */
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// Includes
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
 #include "ble_remote.hpp"
 
 #include <ble_srv_common.h>
@@ -25,33 +21,37 @@
 #include "ble_central.hpp"
 #include "ble_common.hpp"
 #include "ble_es_server.hpp"
+#include "config/app_config.h"
 #include "es_fds.hpp"
 #include "util.hpp"
-
-#include "config/app_config.h"
 
 namespace ble_remote {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Internal Prototypes
+// Private Prototypes
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * Checks FDS to see if a paired address is stored, and reads it into g_paired_addr if so.
- */
+/** Checks FDS to see if a paired address is stored, and reads it into g_paired_addr if so. */
 static void init_paired_addr();
 
-/** BLE scan event handler. */
+/**
+ * BLE scan event handler.
+ *
+ * @param[in] p_scan_evt the scan event.
+ */
 static void scan_event_handler(scan_evt_t const *p_scan_evt);
 
-/** BLE event handler. */
+/**
+ * BLE event handler.
+ *
+ * @param[in] p_ble_evt the BLE event.
+ * @param[in] p_context context passed when this handler is registered (nullptr).
+ */
 static void ble_event_handler(ble_evt_t const *p_ble_evt, void *p_context);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Internal Data
+// Private Data
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// TODO(CMK) 07/27/20: remove unused variables
 
 /** Register common BLE event handler. */
 NRF_SDH_BLE_OBSERVER(g_ble_observer, BLE_COMMON_OBSERVER_PRIO,
@@ -79,7 +79,7 @@ static ble_gap_addr_t g_paired_addr;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void init() {
-    auto config = ble_common::Config {
+    auto data = ble_common::Data {
         .gatt                   = &g_gatt,
         .gatt_queue             = &g_gatt_queue,
         .scan                   = &g_scan,
@@ -89,18 +89,18 @@ void init() {
         .db_discovery_handler   = nullptr,
     };
 
-    ble_central::init(config);
+    ble_central::init(data);
 
     init_paired_addr();
 
     g_es_server.init();
 
     ble_uuid_t uuid = {
-        .uuid = BLEESCommon::UUID_SERVICE,
-        .type = BLEESCommon::uuid_type(),
+        .uuid = ble_es_common::UUID_SERVICE,
+        .type = ble_es_common::uuid_type(),
     };
     // TODO(CMK) 07/01/20: choose what kind of scanning based on if g_paired_addr is found
-    ble_central::set_uuid_appearance_scan_filter(uuid, BLEESCommon::APPEARANCE);
+    ble_central::set_uuid_appearance_scan_filter(uuid, ble_es_common::APPEARANCE);
 }
 
 void update_sensor_value(std::uint8_t value) {
@@ -108,7 +108,7 @@ void update_sensor_value(std::uint8_t value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Internal Implementations
+// Private Implementations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 static void init_paired_addr() {

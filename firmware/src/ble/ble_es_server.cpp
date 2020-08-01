@@ -14,18 +14,18 @@
 #include <ble_types.h>
 #include <nrf_log.h>
 
-void BLEESServer::init() {
-    /* Default init member variables */
-    _sensor_char_handles = {};
-    _conn_handle = BLE_CONN_HANDLE_INVALID;
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Public Implementations
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void BLEESServer::init() {
     /* Initialize the service UUID */
-    BLEESCommon::init();
+    ble_es_common::init();
 
     /* Add custom electric skateboard service */
     ble_uuid_t uuid {
-        .uuid = BLEESCommon::UUID_SERVICE,
-        .type = BLEESCommon::uuid_type(),
+        .uuid = ble_es_common::UUID_SERVICE,
+        .type = ble_es_common::uuid_type(),
     };
     APP_ERROR_CHECK(
         sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY, &uuid, &_service_handle));
@@ -35,8 +35,8 @@ void BLEESServer::init() {
     ble_add_char_params_t add_char_params = {};
 
     /* Sensor characteristic */
-    add_char_params.uuid                        = { BLEESCommon::UUID_SENSOR_CHAR };
-    add_char_params.uuid_type                   = { BLEESCommon::uuid_type() };
+    add_char_params.uuid                        = { ble_es_common::UUID_SENSOR_CHAR };
+    add_char_params.uuid_type                   = { ble_es_common::uuid_type() };
 
     /* Fixed length, initialize to 0 */
     // TODO(CMK) 06/22/20: verify data type for sensor data
@@ -112,6 +112,6 @@ void BLEESServer::event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
 
         case BLE_GAP_EVT_DISCONNECTED: {
             _this->_conn_handle = BLE_CONN_HANDLE_INVALID;
-        };
+        } break;
     }
 }

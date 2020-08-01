@@ -20,16 +20,16 @@ class BLEESServer {
  private:
     /**< Service handle for this service (provided by BLE stack). */
     std::uint16_t _service_handle;
-    /**< Handles for the sensor characteristic */
+    /**< Handles for the sensor characteristic. */
     ble_gatts_char_handles_t _sensor_char_handles;
-    /**< Handle for the connection to the receiver */
+    /**< Handle for the connection to the receiver. */
     std::uint16_t _conn_handle;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Types, Constants, Definitions
+// Definitions
 ////////////////////////////////////////////////////////////////////////////////////////////////////
  public:
-    /**< Macro to define a BLE event observer */
+    /**< Macro to define a BLE event observer. */
     #define BLE_ES_SERVER_DEF(_name) \
         static BLEESServer _name; \
         NRF_SDH_BLE_OBSERVER(_name ## _obs, \
@@ -37,7 +37,14 @@ class BLEESServer {
                              BLEESServer::event_handler, &_name)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Functions
+// Constructors
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    BLEESServer() : _service_handle { },
+                    _sensor_char_handles { },
+                    _conn_handle { BLE_CONN_HANDLE_INVALID } {}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Public Functions
 ////////////////////////////////////////////////////////////////////////////////////////////////////
  public:
     /**
@@ -49,22 +56,15 @@ class BLEESServer {
     /**
      * Update the sensor value.
      *
-     * @param TODO
+     * @param[in] new_value the new sensor value to send to the client.
      */
     void update_sensor_value(std::uint8_t new_value);
 
     /**
      * BLE event handler for this service.
      *
-     * @param[in] p_ble_evt pointer to the event
-     * @param[in] p_context pointer to self (passed when defined by BLE_ES_SERVER_DEF)
+     * @param[in] p_ble_evt the BLE event.
+     * @param[in] p_context context passed when this handler is registered (pointer to "this").
      */
     static void event_handler(ble_evt_t const *p_ble_evt, void *p_context);
-
- private:
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// Constructors and Destructors
-////////////////////////////////////////////////////////////////////////////////////////////////////
-    BLEESServer() = delete;
-    ~BLEESServer() = delete;
 };  // class BLEESServer

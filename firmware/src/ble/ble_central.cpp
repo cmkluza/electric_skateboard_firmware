@@ -10,10 +10,6 @@
  * Distributed under the MIT license (see LICENSE or https://opensource.org/licenses/MIT)
  */
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// Includes
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
 #include "ble_central.hpp"
 
 #include <nrf_assert.h>
@@ -25,36 +21,40 @@
 namespace ble_central {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Internal Data
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-static nrf_ble_gatt_t *g_gatt;  /**< nRF BLE GATT instance. */
-static nrf_ble_scan_t *g_scan;  /**< nRF BLE scanner instance. */
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// Internal Prototypes
+// Private Prototypes
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Initializes BLE scanner with default parameters and the given event handler.
+ * Initializes BLE scanner with default parameters and an event handler.
+ *
+ * @param[in] handler pointer to the event handler to initialize the scan module with.
  */
-static void scan_init(nrf_ble_scan_evt_handler_t event_handler);
+static void scan_init(nrf_ble_scan_evt_handler_t handler);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Private Data
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**< nRF BLE GATT instance. */
+static nrf_ble_gatt_t *g_gatt;
+/**< nRF BLE scanner instance. */
+static nrf_ble_scan_t *g_scan;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Implementations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void init(const ble_common::Config &config) {
-    g_gatt = config.gatt;
-    g_scan = config.scan;
+void init(const ble_common::Data &data) {
+    g_gatt = data.gatt;
+    g_scan = data.scan;
 
     ASSERT(g_scan != nullptr &&
            g_gatt != nullptr);
 
-    ble_common::init(config);
+    ble_common::init(data);
 
     /* Initialize BLE central-specific modules */
-    scan_init(config.scan_handler);
+    scan_init(data.scan_handler);
 }
 
 void set_addr_scan_filter(const ble_gap_addr_t &addr) {
@@ -88,10 +88,10 @@ void begin_scanning() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Internal Implementations
+// Private Implementations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-static void scan_init(nrf_ble_scan_evt_handler_t event_handler) {
+static void scan_init(nrf_ble_scan_evt_handler_t handler) {
     nrf_ble_scan_init_t init_scan = {
         .p_scan_param = nullptr,   /** Use default scan parameters. */
         .connect_if_match = true,  /** Connect once a filter match is found. */
@@ -99,7 +99,7 @@ static void scan_init(nrf_ble_scan_evt_handler_t event_handler) {
         .conn_cfg_tag = BLE_COMMON_CONN_CFG_TAG,
     };
 
-    APP_ERROR_CHECK(nrf_ble_scan_init(g_scan, &init_scan, event_handler));
+    APP_ERROR_CHECK(nrf_ble_scan_init(g_scan, &init_scan, handler));
 }
 
 }  // namespace ble_central

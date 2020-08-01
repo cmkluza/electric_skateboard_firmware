@@ -17,19 +17,24 @@
 
 #pragma once
 
-#include "ble_common.hpp"
-
 #include <ble_gap.h>
 #include <bsp.h>
 #include <sdk_errors.h>
 
+#include "ble_common.hpp"
+
 namespace ble_peripheral {
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Public Functions
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
     /**
-     * Initializes BLE peripheral modules.
+     * Performs common BLE initialization and initializes GAP, connection parameters, advertising,
+     * and DB discovery.
      *
-     * TODO(CMK) 06/24/20: update with specifics
+     * @param[in] data struct containing pointers to instances of Nordic BLE modules.
      */
-    void init(const ble_common::Config &config);
+    void init(const ble_common::Data &data);
 
     /**
      * Sets advertising data to advertise this device's name.
@@ -38,8 +43,10 @@ namespace ble_peripheral {
 
     /**
      * Sets advertising data to advertise the ES service UUID and appearance.
+     *
+     * @param[in] uuid pointer to the BLE UUID to advertise.
      */
-    void advertise_uuid_appearance(const ble_uuid_t &uuid);
+    void advertise_uuid_appearance(ble_uuid_t *uuid);
 
     /**
       * Starts advertising.

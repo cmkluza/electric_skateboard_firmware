@@ -17,8 +17,6 @@
 #include <nrf_sdh_ble.h>
 #include <sdk_errors.h>
 
-#include "ble_es_client.hpp"
-#include "ble_es_server.hpp"
 #include "util.hpp"
 
 namespace ble_common {
@@ -28,7 +26,7 @@ namespace ble_common {
 
 SUPPRESS_WARNING_START("-Wsubobject-linkage")
 
-struct Config {
+struct Data {
     /**< nRF BLE GATT instance. */
     nrf_ble_gatt_t *gatt;
 
@@ -51,11 +49,15 @@ struct Config {
 
 SUPPRESS_WARNING_END()
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Public Functions
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
- * Initializes common BLE stack and modules.
+ * Initializes soft device and common BLE modules (i.e. GATT and peer manager).
  *
- * TODO CMK 06/24/20: specifics
+ * @param[in] data struct containing pointers to instances of Nordic BLE modules.
  */
-void init(const Config &config);
+void init(const Data &data);
 
 }  // namespace ble_common

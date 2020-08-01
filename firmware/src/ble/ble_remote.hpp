@@ -12,6 +12,9 @@
 #include <cstdint>
 
 namespace ble_remote {
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Public Functions
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Initializes the BLE stack and starts scanning for a receiver.
@@ -19,7 +22,9 @@ namespace ble_remote {
     void init();
 
     /**
+     * Updates the sensor value in the GATT server.
      *
+     * @param[in] value the new sensor value.
      */
     void update_sensor_value(std::uint8_t value);
 

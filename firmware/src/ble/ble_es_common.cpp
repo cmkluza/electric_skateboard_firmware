@@ -5,17 +5,30 @@
  * Distributed under the MIT license (see LICENSE or https://opensource.org/licenses/MIT)
  */
 
-#pragma once
-
 #include "ble_es_common.hpp"
 
 #include <app_error.h>
 #include <ble.h>
 
-std::uint8_t BLEESCommon::_uuid_type;
+namespace ble_es_common {
 
-void BLEESCommon::init() {
-    /* Add vendor specific 128-bit UUID */
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Private Data
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static std::uint8_t g_uuid_type;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Public Implementations
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void init() {
     ble_uuid128_t base_uuid = UUID_BASE;
-    APP_ERROR_CHECK(sd_ble_uuid_vs_add(&base_uuid, &_uuid_type));
+    APP_ERROR_CHECK(sd_ble_uuid_vs_add(&base_uuid, &g_uuid_type));
 }
+
+std::uint8_t uuid_type() {
+    return g_uuid_type;
+}
+
+}  // namespace ble_es_common

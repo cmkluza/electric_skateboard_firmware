@@ -15,6 +15,9 @@
 #include <cstdint>
 
 namespace es_fds {
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Public Functions
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Initializes the FDS library.
@@ -24,19 +27,20 @@ namespace es_fds {
     /**
      * Checks to see if the given record is stored in flash.
      *
-     * @param[in] file_id the FDS file ID.
-     * @param[in] record_key the FDS record key.
+     * @param[in]  file_id the FDS file ID.
+     * @param[in]  record_key the FDS record key.
      * @param[out] desc the record descriptor filled in if the record is present.
      *
      * @return true if the record is present, else false.
      */
-    bool record_is_present(std::uint16_t file_id, std::uint16_t record_key, fds_record_desc_t *desc);
+    bool record_is_present(std::uint16_t file_id, std::uint16_t record_key,
+                           fds_record_desc_t *desc);
 
     /**
      * Reads data from an FDS record.
      *
-     * @param[in] desc the record descriptor to be read.
-     * @param[out] buffer pointer to be written to.
+     * @param[in] desc       the record descriptor to be read.
+     * @param[out] buffer    pointer to be written to.
      * @param[in] buffer_len size to be read.
      *
      * @return NRF_SUCCESS if the read was successful, or an error code.

@@ -16,24 +16,22 @@
 namespace es_fds {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Internal Data
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Whether or not the library is initialzied yet.
- */
-static bool g_is_initialized { false };
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// Internal Prototypes
+// Private Prototypes
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Event handler for FDS events.
  *
- * @param[in] p_evt pointer to structure containing context and status for the event.
+ * @param[in] p_evt the FDS event.
  */
 static void event_handler(fds_evt_t const *p_evt);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Private Data
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**< Whether or not the library is initialzied yet. */
+static volatile bool g_is_initialized { false };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Implementations
@@ -49,8 +47,8 @@ void init() {
 
 bool record_is_present(std::uint16_t file_id, std::uint16_t record_key, fds_record_desc_t *p_desc) {
     fds_find_token_t tok = {};
-
     auto ret_code = fds_record_find(file_id, record_key, p_desc, &tok);
+
     switch (ret_code) {
         case NRF_SUCCESS:
             return true;
@@ -68,7 +66,7 @@ ret_code_t read_record(fds_record_desc_t *desc, std::uint8_t *buffer, size_t buf
 
     if (auto ret_code = fds_record_open(desc, &config); ret_code != NRF_SUCCESS) {
         NRF_LOG_WARNING("%s::fds_record_open failed: %s",
-            __FILE__, __func__, nrf_strerror_get(ret_code));
+            __func__, nrf_strerror_get(ret_code));
         return ret_code;
     }
 
@@ -76,7 +74,7 @@ ret_code_t read_record(fds_record_desc_t *desc, std::uint8_t *buffer, size_t buf
 
     if (auto ret_code = fds_record_close(desc); ret_code != NRF_SUCCESS) {
         NRF_LOG_WARNING("%s::fds_record_close failed: %s",
-            __FILE__, __func__, nrf_strerror_get(ret_code));
+            __func__, nrf_strerror_get(ret_code));
         return ret_code;
     }
 
@@ -88,7 +86,7 @@ void idle() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Internal Implementations
+// Private Implementations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 static void event_handler(fds_evt_t const *p_evt) {

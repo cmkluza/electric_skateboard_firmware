@@ -15,10 +15,6 @@
  * Distributed under the MIT license (see LICENSE or https://opensource.org/licenses/MIT)
  */
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// Includes
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
 #include "ble_peripheral.hpp"
 
 #include <app_error.h>
@@ -35,13 +31,38 @@
 #include <nrf_sdh.h>
 #include <nrf_sdh_ble.h>
 
+#include "ble_es_common.hpp"
 #include "config/app_config.h"
 #include "util.hpp"
 
 namespace ble_peripheral {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Internal Data
+// Private Prototypes
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Configures GAP parameters.
+ *
+ * Sets up the security mode, appearance, and connection parameters for this device.
+ */
+static void gap_init();
+
+/** Configures and initializes BLE advertising. */
+static void advertising_init();
+
+/** Configures and initializes connection parameters. */
+static void conn_params_init();
+
+/**
+ * Configures and initializes the DB discovery module.
+ *
+ * @param[in] handler pointer to the event handler to initialize the DB discovery module with.
+ */
+static void db_discovery_init(ble_db_discovery_evt_handler_t handler);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Private Data
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**< nRF BLE GATT instance. */
@@ -54,47 +75,27 @@ static ble_db_discovery_t *g_discovery;
 static nrf_ble_gq_t *g_gatt_queue;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Internal Prototypes
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Configures GAP parameters.
- *
- * Sets up the security mode, appearance, and connection parameters for this device.
- */
-static void gap_init();
-
-/** Function for initializing the Advertising functionality. */
-static void advertising_init();
-
-/** Function for initializing the Connection Parameters module. */
-static void conn_params_init();
-
-/** Initialize the DB discovery module. */
-static void db_discovery_init(ble_db_discovery_evt_handler_t handler);
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Implementations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void init(const ble_common::Config &config) {
-    g_gatt = config.gatt;
-    g_gatt_queue = config.gatt_queue;
-    g_advertising = config.advertising;
-    g_discovery = config.discovery;
+void init(const ble_common::Data &data) {
+    g_gatt          = data.gatt;
+    g_gatt_queue    = data.gatt_queue;
+    g_advertising   = data.advertising;
+    g_discovery     = data.discovery;
 
     ASSERT(g_gatt != nullptr &&
            g_gatt_queue != nullptr &&
            g_advertising != nullptr &&
            g_discovery != nullptr);
 
-    ble_common::init(config);
+    ble_common::init(data);
 
     /* Initialize BLE peripheral-specific modules */
     gap_init();
     advertising_init();
     conn_params_init();
-    db_discovery_init(config.db_discovery_handler);
+    db_discovery_init(data.db_discovery_handler);
 }
 
 void advertise_name() {
@@ -105,12 +106,12 @@ void advertise_name() {
     APP_ERROR_CHECK(ble_advertising_advdata_update(g_advertising, &advdata, nullptr));
 }
 
-void advertise_uuid_appearance(const ble_uuid_t &uuid) {
+void advertise_uuid_appearance(ble_uuid_t *uuid) {
     ble_advdata_t advdata = {
         .include_appearance = true,
         .uuids_complete = {
             .uuid_cnt = 1,
-            .p_uuids = &uuid,
+            .p_uuids = uuid,
         },
     };
 
@@ -122,7 +123,7 @@ void start_advertising() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Internal Implementations
+// Private Implementations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 static void gap_init() {
@@ -134,7 +135,7 @@ static void gap_init() {
            reinterpret_cast<const std::uint8_t *>(BLE_PERIPHERAL_DEVICE_NAME),
            strlen(BLE_PERIPHERAL_DEVICE_NAME)));
 
-    APP_ERROR_CHECK(sd_ble_gap_appearance_set(BLEESCommon::APPEARANCE));
+    APP_ERROR_CHECK(sd_ble_gap_appearance_set(ble_es_common::APPEARANCE));
 
     ble_gap_conn_params_t params = {
         .min_conn_interval = BLE_PERIPHERAL_MIN_CONN_INTERVAL,
