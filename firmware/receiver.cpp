@@ -19,8 +19,12 @@
 #include "ble_peripheral.hpp"
 #include "ble_receiver.hpp"
 #include "es_fds.hpp"
+#include "hall_sensor.hpp"
 #include "logger.hpp"
 #include "util.hpp"
+
+// TODO(CMK) 08/01/20: move to a separate module
+static void handle_sensor_data(HallSensor::type sensor_data);
 
 int main() {
     /* Early init */
@@ -34,12 +38,7 @@ int main() {
     // es_fds::init();
 
     /* BLE initialization */
-    ble_receiver::init();
-
-    /* Setup the SDH thread to start scanning */
-    nrf_sdh_freertos_init([](void *ignored) {
-        ble_peripheral::start_advertising();
-    }, nullptr);
+    ble_receiver::init(handle_sensor_data);
 
     /* FreeRTOS initialization */
     NRF_LOG_INFO("FreeRTOS Starting");
@@ -59,4 +58,8 @@ extern "C"
 void vApplicationIdleHook(void) {
     logger::idle();
     // TODO(CMK) 06/19/20: enter power saving here?
+}
+
+static void handle_sensor_data(HallSensor::type sensor_data) {
+    NRF_LOG_INFO("Recieved sensor data: 0x%04X", sensor_data);
 }

@@ -45,37 +45,38 @@ namespace util {
 // Constants
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /**< Length of a 16-bit UUID. */
-    inline constexpr std::uint32_t UUID16_LEN = { 2 };
+/**< Length of a 16-bit UUID. */
+inline constexpr std::uint32_t UUID16_LEN = { 2 };
 
-    /**< Length of a 128-bit UUID. */
-    inline constexpr std::uint32_t UUID128_LEN = { 16 };
+/**< Length of a 128-bit UUID. */
+inline constexpr std::uint32_t UUID128_LEN = { 16 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Functions
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Function for initializing the clock.
-     */
-    void clock_init();
+/**
+ * Function for initializing the clock.
+ */
+void clock_init();
 
-    /**
-     * Enables deep sleep instead of regular sleep in the SCB.
-     */
-    void enable_deep_sleep();
+/**
+ * Enables deep sleep instead of regular sleep in the SCB.
+ */
+void enable_deep_sleep();
 
-    /**
-     * Logs a 128-bit UUID.
-     *
-     * @param[in] uuid pointer to the UUID to be logged.
-     */
-    void log_uuid(const ble_uuid128_t *uuid);
+/**
+ * Logs a 128-bit UUID.
+ *
+ * @param[in] uuid pointer to the UUID to be logged.
+ */
+void log_uuid(const ble_uuid128_t *uuid);
 
-    /**
-     * Logs a piece of advertisement data.
-     *
-     * @param[in] data pointer to the advertisement data.
-     */
-    void log_ble_data(const ble_data_t *data);
+/**
+ * Logs a piece of advertisement data.
+ *
+ * @param[in] data pointer to the advertisement data.
+ */
+void log_ble_data(const ble_data_t *data);
+
 }  // namespace util

@@ -9,6 +9,7 @@
 
 #include "ble_receiver.hpp"
 
+#include <app_error.h>
 #include <ble_db_discovery.h>
 #include <ble_srv_common.h>
 #include <nrf_ble_gatt.h>
@@ -16,11 +17,13 @@
 #include <nrf_ble_scan.h>
 #include <nrf_log.h>
 #include <nrf_sdh_ble.h>
+#include <nrf_sdh_freertos.h>
 
 #include <cstring>
 
 #include "ble_common.hpp"
 #include "ble_es_client.hpp"
+#include "ble_events.hpp"
 #include "ble_peripheral.hpp"
 #include "config/app_config.h"
 #include "es_fds.hpp"
@@ -50,19 +53,9 @@ static void ble_event_handler(ble_evt_t const *p_ble_evt, void *p_context);
  */
 static void db_discovery_evt_handler(ble_db_discovery_evt_t *p_evt);
 
-/**
- * Sensor data callback.
- *
- * @param[in] sensor_data the new sensor data.
- */
-// TODO(CMK) 07/28/20: move this into a separate sensor module?
-static void sensor_data_callback(std::uint8_t sensor_data);
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Private Data
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// TODO(CMK) 07/27/20: remove unused variables
 
 /**< Register common BLE event handler. */
 NRF_SDH_BLE_OBSERVER(g_ble_observer, BLE_COMMON_OBSERVER_PRIO,
@@ -95,7 +88,7 @@ static ble_gap_addr_t g_paired_addr;
 // Public Implementations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void init() {
+void init(SensorCallback sensor_callback) {
     auto data = ble_common::Data {
         .gatt                   = &g_gatt,
         .gatt_queue             = &g_gatt_queue,
@@ -111,7 +104,7 @@ void init() {
     init_paired_addr();
 
     g_es_client.init(&g_gatt_queue);
-    g_es_client.register_sensor_data_callback(sensor_data_callback);
+    g_es_client.register_sensor_data_callback(sensor_callback);
 
     ble_uuid_t uuid {
         .uuid = ble_es_common::UUID_SERVICE,
@@ -120,6 +113,11 @@ void init() {
 
     // TODO(CMK) 07/27/20: choose what kind of advertising based on if g_paired_addr is found
     ble_peripheral::advertise_uuid_appearance(&uuid);
+
+    /* Setup the SDH thread to start scanning */
+    nrf_sdh_freertos_init([](void *ignored) {
+        ble_peripheral::start_advertising();
+    }, nullptr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -144,7 +142,7 @@ static void init_paired_addr() {
 }
 
 static void ble_event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
-    // TODO(CMK) 06/24/20: implement common BLE event handling/dispatch
+    ble_events::Event event {};
 
     switch (p_ble_evt->header.evt_id) {
         /** BLE GAP events */
@@ -159,6 +157,11 @@ static void ble_event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
 
             g_paired_addr = connected_evt.peer_addr;
 
+            event.event = ble_events::Events::CONNECTED;
+            event.data.connected.address = connected_evt.peer_addr.addr;
+
+            ble_events::trigger_event(&event);
+
             // TODO(CMK) 07/11/20: more connection handling?
         } break;
 
@@ -169,6 +172,12 @@ static void ble_event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
 
             NRF_LOG_INFO("Disconnected from 0x%X (reason: 0x%X)",
                          gap_evt.conn_handle, disconnected_evt.reason);
+
+            event.event = ble_events::Events::DISCONNECTED;
+            event.data.disconnected.address = g_paired_addr.addr;
+            event.data.disconnected.reason = disconnected_evt.reason;
+
+            ble_events::trigger_event(&event);
 
             // TODO(CMK) 07/11/20: more disconnection handling? start scanning?
         } break;
@@ -229,10 +238,6 @@ static void ble_event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
 
 static void db_discovery_evt_handler(ble_db_discovery_evt_t *p_evt) {
     g_es_client.on_db_discovery_evt(p_evt);
-}
-
-static void sensor_data_callback(std::uint8_t sensor_data) {
-    NRF_LOG_INFO("%s: 0x%02X", __func__, sensor_data);
 }
 
 }  // namespace ble_receiver

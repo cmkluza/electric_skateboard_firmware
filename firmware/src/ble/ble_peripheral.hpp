@@ -28,28 +28,29 @@ namespace ble_peripheral {
 // Public Functions
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Performs common BLE initialization and initializes GAP, connection parameters, advertising,
-     * and DB discovery.
-     *
-     * @param[in] data struct containing pointers to instances of Nordic BLE modules.
-     */
-    void init(const ble_common::Data &data);
+/**
+ * Performs common BLE initialization and initializes GAP, connection parameters, advertising,
+ * and DB discovery.
+ *
+ * @param[in] data struct containing pointers to instances of Nordic BLE modules.
+ */
+void init(const ble_common::Data &data);
 
-    /**
-     * Sets advertising data to advertise this device's name.
-     */
-    void advertise_name();
+/**
+ * Sets advertising data to advertise this device's name.
+ */
+void advertise_name();
 
-    /**
-     * Sets advertising data to advertise the ES service UUID and appearance.
-     *
-     * @param[in] uuid pointer to the BLE UUID to advertise.
-     */
-    void advertise_uuid_appearance(ble_uuid_t *uuid);
+/**
+ * Sets advertising data to advertise the ES service UUID and appearance.
+ *
+ * @param[in] uuid pointer to the BLE UUID to advertise.
+ */
+void advertise_uuid_appearance(ble_uuid_t *uuid);
 
-    /**
-      * Starts advertising.
-      */
-    void start_advertising();
+/**
+  * Starts advertising.
+  */
+void start_advertising();
+
 }  // namespace ble_peripheral

@@ -104,6 +104,8 @@ void advertise_name() {
     };
 
     APP_ERROR_CHECK(ble_advertising_advdata_update(g_advertising, &advdata, nullptr));
+
+    NRF_LOG_INFO("advertising name");
 }
 
 void advertise_uuid_appearance(ble_uuid_t *uuid) {
@@ -116,10 +118,14 @@ void advertise_uuid_appearance(ble_uuid_t *uuid) {
     };
 
     APP_ERROR_CHECK(ble_advertising_advdata_update(g_advertising, &advdata, nullptr));
+
+    NRF_LOG_INFO("advertising UUID + appearance");
 }
 
 void start_advertising() {
     APP_ERROR_CHECK(ble_advertising_start(g_advertising, BLE_ADV_MODE_FAST));
+
+    NRF_LOG_INFO("%s", __func__);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

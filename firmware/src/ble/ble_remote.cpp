@@ -15,12 +15,14 @@
 #include <nrf_ble_scan.h>
 #include <nrf_log.h>
 #include <nrf_sdh_ble.h>
+#include <nrf_sdh_freertos.h>
 
 #include <cstring>
 
 #include "ble_central.hpp"
 #include "ble_common.hpp"
 #include "ble_es_server.hpp"
+#include "ble_events.hpp"
 #include "config/app_config.h"
 #include "es_fds.hpp"
 #include "util.hpp"
@@ -99,11 +101,17 @@ void init() {
         .uuid = ble_es_common::UUID_SERVICE,
         .type = ble_es_common::uuid_type(),
     };
+
     // TODO(CMK) 07/01/20: choose what kind of scanning based on if g_paired_addr is found
     ble_central::set_uuid_appearance_scan_filter(uuid, ble_es_common::APPEARANCE);
+
+    /* Setup the SDH thread to start scanning */
+    nrf_sdh_freertos_init([](void *ignored) {
+        ble_central::begin_scanning();
+    }, nullptr);
 }
 
-void update_sensor_value(std::uint8_t value) {
+void update_sensor_value(HallSensor::type value) {
     g_es_server.update_sensor_value(value);
 }
 
@@ -129,7 +137,7 @@ static void init_paired_addr() {
 }
 
 static void ble_event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
-    // TODO(CMK) 06/24/20: implement common BLE event handling/dispatch
+    ble_events::Event event {};
 
     switch (p_ble_evt->header.evt_id) {
         /** BLE GAP events */
@@ -144,6 +152,11 @@ static void ble_event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
 
             g_paired_addr = connected_evt.peer_addr;
 
+            event.event = ble_events::Events::CONNECTED;
+            event.data.connected.address = connected_evt.peer_addr.addr;
+
+            ble_events::trigger_event(&event);
+
             // TODO(CMK) 07/11/20: more connection handling?
         } break;
 
@@ -154,6 +167,12 @@ static void ble_event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
 
             NRF_LOG_INFO("Disconnected from 0x%X (reason: 0x%X)",
                          gap_evt.conn_handle, disconnected_evt.reason);
+
+            event.event = ble_events::Events::DISCONNECTED;
+            event.data.disconnected.address = g_paired_addr.addr;
+            event.data.disconnected.reason = disconnected_evt.reason;
+
+            ble_events::trigger_event(&event);
 
             // TODO(CMK) 07/11/20: more disconnection handling? start scanning?
         } break;

@@ -16,14 +16,16 @@
 
 #include <cstdint>
 
+#include "hall_sensor.hpp"
+
 class BLEESServer {
  private:
     /**< Service handle for this service (provided by BLE stack). */
-    std::uint16_t _service_handle;
+    std::uint16_t _service_handle {};
     /**< Handles for the sensor characteristic. */
-    ble_gatts_char_handles_t _sensor_char_handles;
+    ble_gatts_char_handles_t _sensor_char_handles {};
     /**< Handle for the connection to the receiver. */
-    std::uint16_t _conn_handle;
+    std::uint16_t _conn_handle { BLE_CONN_HANDLE_INVALID };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Definitions
@@ -37,13 +39,6 @@ class BLEESServer {
                              BLEESServer::event_handler, &_name)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Constructors
-////////////////////////////////////////////////////////////////////////////////////////////////////
-    BLEESServer() : _service_handle { },
-                    _sensor_char_handles { },
-                    _conn_handle { BLE_CONN_HANDLE_INVALID } {}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Functions
 ////////////////////////////////////////////////////////////////////////////////////////////////////
  public:
@@ -52,13 +47,12 @@ class BLEESServer {
      */
     void init();
 
-    // TODO(CMK) 06/22/20: verify sensor data type
     /**
      * Update the sensor value.
      *
      * @param[in] new_value the new sensor value to send to the client.
      */
-    void update_sensor_value(std::uint8_t new_value);
+    void update_sensor_value(HallSensor::type new_value);
 
     /**
      * BLE event handler for this service.

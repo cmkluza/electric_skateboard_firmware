@@ -11,21 +11,21 @@
 
 #include <cstdint>
 
+#include "hall_sensor.hpp"
+
 namespace ble_remote {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Functions
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Initializes the BLE stack and starts scanning for a receiver.
-     */
-    void init();
+/** Initializes the BLE stack and starts scanning for a receiver. */
+void init();
 
-    /**
-     * Updates the sensor value in the GATT server.
-     *
-     * @param[in] value the new sensor value.
-     */
-    void update_sensor_value(std::uint8_t value);
+/**
+ * Updates the sensor value in the GATT server.
+ *
+ * @param[in] value the new sensor value.
+ */
+void update_sensor_value(HallSensor::type value);
 
 }  // namespace ble_remote

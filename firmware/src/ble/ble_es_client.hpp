@@ -16,22 +16,23 @@
 
 #include <cstdint>
 
+#include "hall_sensor.hpp"
+
 class BLEESClient {
     /**< Callback for when sensor data comes in. */
-    // TODO(CMK) 06/22/20: verify data type for sensor data
-    using SensorCallback = void (*)(std::uint8_t);
+    using SensorCallback = void (*)(HallSensor::type);
 
  private:
     /**< Handle to ES server's Hall sensor char. */
-    std::uint16_t _es_hall_handle;
+    std::uint16_t _es_hall_handle {};
     /**< Handle to ES server's Hall sensor CCCD. */
-    std::uint16_t _es_hall_cccd_handle;
+    std::uint16_t _es_hall_cccd_handle {};
     /**< Connection handle to the remote. */
-    std::uint16_t _conn_handle;
+    std::uint16_t _conn_handle { BLE_CONN_HANDLE_INVALID };
     /**< Callback for when new sensor data comes in. */
-    SensorCallback _callback;
+    SensorCallback _callback {};
     /**< Pointer to GATT queue instance. */
-    nrf_ble_gq_t *_gatt_queue;
+    nrf_ble_gq_t *_gatt_queue {};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Definitions
@@ -43,15 +44,6 @@ class BLEESClient {
     NRF_SDH_BLE_OBSERVER(_name ## _obs, \
                          BLE_ES_OBSERVER_PRIO, \
                          BLEESClient::event_handler, &_name)
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// Constructors
-////////////////////////////////////////////////////////////////////////////////////////////////////
-    BLEESClient() : _es_hall_handle { },
-                    _es_hall_cccd_handle { },
-                    _conn_handle { BLE_CONN_HANDLE_INVALID },
-                    _callback { },
-                    _gatt_queue { } {}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Functions

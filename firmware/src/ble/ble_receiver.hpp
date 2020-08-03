@@ -9,14 +9,23 @@
 
 #pragma once
 
+#include <cstdint>
+
+#include "hall_sensor.hpp"
+
 namespace ble_receiver {
+
+using SensorCallback = void (*)(HallSensor::type);
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Functions
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Initializes the BLE stack and starts advertising.
-     */
-    void init();
+/**
+ * Initializes the BLE stack and starts advertising.
+ *
+ * @param[in] sensor_callback a function to be called whenever new sensor data comes in.
+ */
+void init(SensorCallback sensor_callback);
 
 }  // namespace ble_receiver

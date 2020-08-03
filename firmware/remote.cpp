@@ -9,27 +9,29 @@
 
 
 #include <app_error.h>
+#include <app_timer.h>
 #include <fds.h>
 #include <nrf_log.h>
-#include <nrf_sdh_freertos.h>
 #include <sdk_errors.h>
 
 #include <sensorsim.h>
 
 #include <FreeRTOS.h>
 #include <task.h>
+#include <timers.h>
 
 #include "ble_central.hpp"
+#include "ble_events.hpp"
 #include "ble_remote.hpp"
 #include "es_fds.hpp"
 #include "logger.hpp"
 #include "util.hpp"
 
-// TODO(CMK) 07/28/20: remove, debugging
-static void sensorsim_init();
-static sensorsim_cfg_t sim_cfg;
-static sensorsim_state_t sim_state;
-static void update_sensor_value();
+// TODO(CMK) 08/01/20: testing
+static void on_connection(ble_events::Event *event);
+static TimerHandle_t hall_sensor_timer;
+static HallSensor hallSensor {};
+static void hall_sensor_timeout_handler(TimerHandle_t xTimer);
 
 int main() {
     /* Early init */
@@ -37,17 +39,15 @@ int main() {
 
     /* Hardware and BSP initialization */
     util::clock_init();
+    hallSensor.init();
+    APP_ERROR_CHECK(app_timer_init());
 
     /* Library and module initialization */
     // TODO(CMK) 07/03/20: FDS
 
     /* BLE initialization */
     ble_remote::init();
-
-    /* Setup the SDH thread to start scanning */
-    nrf_sdh_freertos_init([](void *ignored) {
-        ble_central::begin_scanning();
-    }, nullptr);
+    ble_events::register_event(ble_events::Events::CONNECTED, on_connection);
 
     /* FreeRTOS initialization */
     NRF_LOG_INFO("FreeRTOS Starting");
@@ -69,16 +69,20 @@ void vApplicationIdleHook(void) {
     // TODO(CMK) 06/19/20: enter power saving here?
 }
 
-static void sensorsim_init() {
-    sim_cfg.min          = 1;
-    sim_cfg.max          = 100;
-    sim_cfg.incr         = 1;
-    sim_cfg.start_at_max = true;
+static void on_connection(ble_events::Event *event) {
+    NRF_LOG_INFO("Connected callback, starting timer");
 
-    sensorsim_init(&sim_state, &sim_cfg);
+    hall_sensor_timer = xTimerCreate("Hall sens",
+                                     5000, /* interval, ms */
+                                     pdTRUE, /* auto reload */
+                                     nullptr, /* timer ID */
+                                     hall_sensor_timeout_handler);
+
+    xTimerStart(hall_sensor_timer, 0);
 }
 
-static void update_sensor_value() {
-    std::uint8_t sensor_value = sensorsim_measure(&sim_state, &sim_cfg);
-    ble_remote::update_sensor_value(sensor_value);
+static void hall_sensor_timeout_handler(TimerHandle_t xTimer) {
+    auto val = hallSensor.read();
+    NRF_LOG_INFO("Sensor val: 0x%04X", val);
+    ble_remote::update_sensor_value(val);
 }

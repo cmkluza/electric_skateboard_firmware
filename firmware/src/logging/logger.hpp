@@ -12,13 +12,14 @@ namespace logger {
 // Public Functions
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Initializes nRF's logger and its backends.
-     */
-    void init();
+/**
+ * Initializes nRF's logger and its backends.
+ */
+void init();
 
-    /**
-     * Performs the idle task for the logger.
-     */
-    void idle();
+/**
+ * Performs the idle task for the logger.
+ */
+void idle();
+
 }  // namespace logger

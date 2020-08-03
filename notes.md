@@ -47,24 +47,36 @@ This is a scratchpad for notes as this project develops.
 - Alert application when BLE is completely initialized
 - Alert application when notifications come in
 
+### Application ↔ BLE Interactions
+- A generic event system for events of interest acts as a buffer for BLE → app
+communications
+- The application registers event handlers that are called as appropriate
+- The BLE module triggers events to the app when they come in
+
 ---
 
 ## BLE Modules
 ### Remote (`src/ble/ble_remote.cpp,hpp`)
 This is the top-level BLE module for the remote. Application ↔ BLE interactions
-should all take place through this module.
-#### Application ↔ Remote Interactions:
+should all take place through this module. This module shall define events that
+may be of interest to the application, and the application can subscribe to
+these events.
+#### Application ↔ BLE Interactions:
 - App → BLE: BLE initialization
-- BLE → App: BLE initialization complete
+- BLE → App: BLE event
 - App → BLE: new sensor data
 
 ### Receiver (`src/ble/ble_receiver.cpp,hpp`)
 This is the top-level BLE module for the receiver. Application ↔ BLE interactions
-should all take place through this module.
-#### Application ↔ Remote Interactions:
+should all take place through this module. This module shall define events that
+may be of interest to the application, and the application can subscribe to
+these events.
+#### Application ↔ BLE Interactions:
 - App → BLE: BLE initialization
-- BLE → App: BLE initialization complete
+- BLE → App: BLE event
 - App ← BLE: new sensor data
+
+---
 
 ## High-level Application
 
@@ -129,8 +141,8 @@ Source code should be organized (in order):
 ---
 
 # TODOs
-- 07/29/20 (both): Go through and add consistent formatting for comments/documentation
-    especially in headers
+- 08/01/20 (both): Implement a higher level logging utility that can be used in
+                   app.
 - 07/29/20 (both): Implement BLE ES server/client ready alerts to the client
 - 07/29/20 (both): Test BLE ES server/client
 - 07/29/20 (both): Implement secure BLE comms (using peer manager?)
