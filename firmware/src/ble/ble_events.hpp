@@ -23,6 +23,7 @@ namespace ble_events {
 enum class Events {
     CONNECTED,      /**< Connected to a BLE device. */
     DISCONNECTED,   /**< Disconnected from a BLE device. */
+    CCCD_WRITE,     /**< The CCCD for the sensor char was updated. */
     COUNT,          /**< For declaring arrays. */
 };
 
@@ -35,8 +36,11 @@ union EventData {
     } connected;
     struct Disconnected {
         const std::uint8_t *address; /**< Pointer to the 6-byte BLE address. */
-        std::uint8_t reason;   /**< Reason for disconnect. */
+        std::uint8_t reason;         /**< Reason for disconnect. */
     } disconnected;
+    struct CCCDWrite {
+        bool notifications_enabled; /**< Whether or not notifications are enabled. */
+    } cccd_write;
 };
 
 /**
