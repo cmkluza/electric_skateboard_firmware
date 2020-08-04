@@ -142,7 +142,8 @@ static void init_paired_addr() {
 }
 
 static void ble_event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
-    ble_events::Event event {};
+    using namespace ble_events;
+    Event event {};
 
     switch (p_ble_evt->header.evt_id) {
         /** BLE GAP events */
@@ -153,14 +154,15 @@ static void ble_event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
             const auto &connected_evt = gap_evt.params.connected;
 
             NRF_LOG_INFO("Connected to " MAC_FMT, MAC_ARGS(connected_evt.peer_addr.addr));
-            NRF_LOG_INFO("Connection handle 0x%X", gap_evt.conn_handle);
+            NRF_LOG_INFO("Connection handle 0x%X. Starting DB discovery", gap_evt.conn_handle);
+
+            APP_ERROR_CHECK(ble_db_discovery_start(&g_db_discovery, gap_evt.conn_handle));
 
             g_paired_addr = connected_evt.peer_addr;
 
-            event.event = ble_events::Events::CONNECTED;
+            event.event = Events::CONNECTED;
             event.data.connected.address = connected_evt.peer_addr.addr;
-
-            ble_events::trigger_event(&event);
+            trigger_event(&event);
 
             // TODO(CMK) 07/11/20: more connection handling?
         } break;
@@ -173,11 +175,11 @@ static void ble_event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
             NRF_LOG_INFO("Disconnected from 0x%X (reason: 0x%X)",
                          gap_evt.conn_handle, disconnected_evt.reason);
 
-            event.event = ble_events::Events::DISCONNECTED;
+            event.event = Events::DISCONNECTED;
             event.data.disconnected.address = g_paired_addr.addr;
             event.data.disconnected.reason = disconnected_evt.reason;
 
-            ble_events::trigger_event(&event);
+            trigger_event(&event);
 
             // TODO(CMK) 07/11/20: more disconnection handling? start scanning?
         } break;

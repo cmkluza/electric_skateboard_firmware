@@ -440,29 +440,6 @@
     <folder Name="Segger Startup Files">
       <file file_name="$(StudioDir)/source/thumb_crt0.s" />
     </folder>
-    <folder Name="nRF_Log">
-      <file file_name="../sdk/components/libraries/log/src/nrf_log_backend_rtt.c" />
-      <file file_name="../sdk/components/libraries/log/src/nrf_log_backend_serial.c" />
-      <file file_name="../sdk/components/libraries/log/src/nrf_log_backend_uart.c" />
-      <file file_name="../sdk/components/libraries/log/src/nrf_log_default_backends.c" />
-      <file file_name="../sdk/components/libraries/log/src/nrf_log_frontend.c" />
-      <file file_name="../sdk/components/libraries/log/src/nrf_log_str_formatter.c" />
-      <folder Name="headers">
-        <file file_name="../sdk/components/libraries/log/nrf_log.h" />
-        <file file_name="../sdk/components/libraries/log/nrf_log_backend_flash.h" />
-        <file file_name="../sdk/components/libraries/log/nrf_log_backend_interface.h" />
-        <file file_name="../sdk/components/libraries/log/nrf_log_backend_rtt.h" />
-        <file file_name="../sdk/components/libraries/log/nrf_log_backend_serial.h" />
-        <file file_name="../sdk/components/libraries/log/nrf_log_backend_uart.h" />
-        <file file_name="../sdk/components/libraries/log/nrf_log_ctrl.h" />
-        <file file_name="../sdk/components/libraries/log/nrf_log_default_backends.h" />
-        <file file_name="../sdk/components/libraries/log/nrf_log_instance.h" />
-        <file file_name="../sdk/components/libraries/log/nrf_log_str_formatter.h" />
-        <file file_name="../sdk/components/libraries/log/nrf_log_types.h" />
-        <file file_name="../sdk/components/libraries/log/src/nrf_log_ctrl_internal.h" />
-        <file file_name="../sdk/components/libraries/log/src/nrf_log_internal.h" />
-      </folder>
-    </folder>
     <folder Name="nRF_Libraries">
       <folder Name="atomic">
         <file file_name="../sdk/components/libraries/atomic/nrf_atomic.c" />
@@ -672,6 +649,9 @@
         </folder>
       </folder>
       <file file_name="../receiver.cpp" />
+      <folder Name="hall_sensor">
+        <file file_name="../src/hall_sensor/hall_sensor.hpp" />
+      </folder>
     </folder>
     <folder Name="Config">
       <file file_name="../config/sdk_config.h" />
@@ -793,6 +773,29 @@
         <file file_name="../sdk/components/softdevice/s140/headers/nrf_sdm.h" />
         <file file_name="../sdk/components/softdevice/s140/headers/nrf_soc.h" />
         <file file_name="../sdk/components/softdevice/s140/headers/nrf_svc.h" />
+      </folder>
+    </folder>
+    <folder Name="nRF_Log">
+      <file file_name="../sdk/components/libraries/log/src/nrf_log_backend_rtt.c" />
+      <file file_name="../sdk/components/libraries/log/src/nrf_log_backend_serial.c" />
+      <file file_name="../sdk/components/libraries/log/src/nrf_log_backend_uart.c" />
+      <file file_name="../sdk/components/libraries/log/src/nrf_log_default_backends.c" />
+      <file file_name="../sdk/components/libraries/log/src/nrf_log_frontend.c" />
+      <file file_name="../sdk/components/libraries/log/src/nrf_log_str_formatter.c" />
+      <folder Name="headers">
+        <file file_name="../sdk/components/libraries/log/nrf_log.h" />
+        <file file_name="../sdk/components/libraries/log/nrf_log_backend_flash.h" />
+        <file file_name="../sdk/components/libraries/log/nrf_log_backend_interface.h" />
+        <file file_name="../sdk/components/libraries/log/nrf_log_backend_rtt.h" />
+        <file file_name="../sdk/components/libraries/log/nrf_log_backend_serial.h" />
+        <file file_name="../sdk/components/libraries/log/nrf_log_backend_uart.h" />
+        <file file_name="../sdk/components/libraries/log/nrf_log_ctrl.h" />
+        <file file_name="../sdk/components/libraries/log/nrf_log_default_backends.h" />
+        <file file_name="../sdk/components/libraries/log/nrf_log_instance.h" />
+        <file file_name="../sdk/components/libraries/log/nrf_log_str_formatter.h" />
+        <file file_name="../sdk/components/libraries/log/nrf_log_types.h" />
+        <file file_name="../sdk/components/libraries/log/src/nrf_log_ctrl_internal.h" />
+        <file file_name="../sdk/components/libraries/log/src/nrf_log_internal.h" />
       </folder>
     </folder>
   </project>

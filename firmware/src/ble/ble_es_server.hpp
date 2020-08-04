@@ -26,6 +26,8 @@ class BLEESServer {
     ble_gatts_char_handles_t _sensor_char_handles {};
     /**< Handle for the connection to the receiver. */
     std::uint16_t _conn_handle { BLE_CONN_HANDLE_INVALID };
+    /**< Whether or not notifications have been enalbed (CCCD written). */
+    bool _notifications_enabled {};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Definitions

@@ -14,6 +14,8 @@
 #include <ble_types.h>
 #include <nrf_log.h>
 
+#include "ble_events.hpp"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Implementations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -85,27 +87,36 @@ void BLEESServer::update_sensor_value(HallSensor::type new_value) {
         return;
     }
 
+    if (!_notifications_enabled) {
+        NRF_LOG_WARNING("Attempted update sensor char before updates are enabled");
+        return;
+    }
+
     NRF_LOG_INFO("%s: 0x%04X", __func__, new_value);
 
     std::uint16_t len = { sizeof(new_value) };
+    std::uint8_t bytes[sizeof(new_value)];
+    HallSensor::to_bytes(new_value, bytes);
 
     ble_gatts_hvx_params_t params = {
         .handle = _sensor_char_handles.value_handle,
         .type   = BLE_GATT_HVX_NOTIFICATION,
         .offset = 0,
         .p_len  = &len,
-        .p_data = reinterpret_cast<std::uint8_t *>(&new_value),
+        .p_data = bytes,
     };
 
     auto ret = sd_ble_gatts_hvx(_conn_handle, &params);
     if (ret != NRF_SUCCESS)
-        NRF_LOG_INFO("sd_ble_gatts_hvx: %X", ret);
+        NRF_LOG_INFO("%s::sd_ble_gatts_hvx: 0x%08X", __func__, ret);
 }
 
 void BLEESServer::event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
     auto *_this = reinterpret_cast<BLEESServer *>(p_context);
 
     switch (p_ble_evt->header.evt_id) {
+        /** GAP Events **/
+
         // TODO(CMK) 07/27/20: anticipate issues with multiple connections
         case BLE_GAP_EVT_CONNECTED: {
             _this->_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
@@ -113,6 +124,36 @@ void BLEESServer::event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
 
         case BLE_GAP_EVT_DISCONNECTED: {
             _this->_conn_handle = BLE_CONN_HANDLE_INVALID;
+        } break;
+
+        /** GATT Server Events **/
+
+        case BLE_GATTS_EVT_WRITE: {
+            const auto &write_evt = p_ble_evt->evt.gatts_evt.params.write;
+
+            if (write_evt.handle == _this->_sensor_char_handles.cccd_handle &&
+                write_evt.len == 2) {
+                _this->_notifications_enabled = ble_srv_is_notification_enabled(write_evt.data);
+                NRF_LOG_DEBUG("CCCD written - notifications enabled: %d",
+                             _this->_notifications_enabled);
+
+                using namespace ble_events;
+                ble_events::Event event {
+                    .event = Events::CCCD_WRITE,
+                    .data = {
+                        .cccd_write = {
+                            .notifications_enabled = _this->_notifications_enabled,
+                        }
+                    }
+                };
+                trigger_event(&event);
+            }
+        } break;
+
+        case BLE_GATTS_EVT_SYS_ATTR_MISSING: {
+            APP_ERROR_CHECK(sd_ble_gatts_sys_attr_set(_this->_conn_handle, nullptr, 0,
+                BLE_GATTS_SYS_ATTR_FLAG_SYS_SRVCS | BLE_GATTS_SYS_ATTR_FLAG_USR_SRVCS));
+            NRF_LOG_DEBUG("Updated sys attr");
         } break;
     }
 }

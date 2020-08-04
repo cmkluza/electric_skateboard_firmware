@@ -40,6 +40,8 @@ void BLEESClient::event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
     switch (p_ble_evt->header.evt_id) {
         case BLE_GAP_EVT_CONNECTED: {
             _this->_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
+            APP_ERROR_CHECK(
+                nrf_ble_gq_conn_handle_register(_this->_gatt_queue, _this->_conn_handle));
         } break;
 
         case BLE_GAP_EVT_DISCONNECTED: {
@@ -58,11 +60,14 @@ void BLEESClient::event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
 
             if (hvx_evt.handle == _this->_es_hall_handle) {
                 if (_this->_callback) {
-                    _this->_callback(hvx_evt.data[0]);
+                    _this->_callback(HallSensor::from_bytes(hvx_evt.data));
                 }
             }
 
-            APP_ERROR_CHECK(sd_ble_gattc_hv_confirm(gattc_evt.conn_handle, hvx_evt.handle));
+            auto ret = sd_ble_gattc_hv_confirm(gattc_evt.conn_handle, hvx_evt.handle);
+            if (ret != NRF_SUCCESS) {
+                NRF_LOG_INFO("%s::sd_ble_gattc_hv_confirm: 0x%08X", ret);
+            }
         } break;
     }
 }
@@ -75,6 +80,7 @@ void BLEESClient::on_db_discovery_evt(const ble_db_discovery_evt_t *p_evt) {
             if (discovered_db.srv_uuid.uuid == ble_es_common::UUID_SERVICE &&
                 discovered_db.srv_uuid.type == ble_es_common::uuid_type())
             { // NOLINT
+                NRF_LOG_DEBUG("DB discovery complete");
                 const auto &characteristics = discovered_db.charateristics;
 
                 for (unsigned i = 0; i < discovered_db.char_count; ++i) {
@@ -125,5 +131,10 @@ void BLEESClient::subscribe_to_notifications() {
         }
     };
 
-    nrf_ble_gq_item_add(_gatt_queue, &cccd_req, _conn_handle);
+    auto ret = nrf_ble_gq_item_add(_gatt_queue, &cccd_req, _conn_handle);
+    if (ret != NRF_SUCCESS) {
+        NRF_LOG_INFO("%s::nrf_ble_gq_item_add: 0x%08X", __func__, ret);
+    }
+
+    NRF_LOG_DEBUG("Subscribed to CCCD notifications");
 }

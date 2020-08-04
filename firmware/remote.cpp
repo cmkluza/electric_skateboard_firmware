@@ -28,7 +28,7 @@
 #include "util.hpp"
 
 // TODO(CMK) 08/01/20: testing
-static void on_connection(ble_events::Event *event);
+static void on_cccd_write(ble_events::Event *event);
 static TimerHandle_t hall_sensor_timer;
 static HallSensor hallSensor {};
 static void hall_sensor_timeout_handler(TimerHandle_t xTimer);
@@ -41,13 +41,18 @@ int main() {
     util::clock_init();
     hallSensor.init();
     APP_ERROR_CHECK(app_timer_init());
+    hall_sensor_timer = xTimerCreate("Hall sens",
+                                     5000, /* interval, ms */
+                                     pdTRUE, /* auto reload */
+                                     nullptr, /* timer ID */
+                                     hall_sensor_timeout_handler);
 
     /* Library and module initialization */
     // TODO(CMK) 07/03/20: FDS
 
     /* BLE initialization */
     ble_remote::init();
-    ble_events::register_event(ble_events::Events::CONNECTED, on_connection);
+    ble_events::register_event(ble_events::Events::CCCD_WRITE, on_cccd_write);
 
     /* FreeRTOS initialization */
     NRF_LOG_INFO("FreeRTOS Starting");
@@ -69,20 +74,17 @@ void vApplicationIdleHook(void) {
     // TODO(CMK) 06/19/20: enter power saving here?
 }
 
-static void on_connection(ble_events::Event *event) {
+static void on_cccd_write(ble_events::Event *event) {
     NRF_LOG_INFO("Connected callback, starting timer");
 
-    hall_sensor_timer = xTimerCreate("Hall sens",
-                                     5000, /* interval, ms */
-                                     pdTRUE, /* auto reload */
-                                     nullptr, /* timer ID */
-                                     hall_sensor_timeout_handler);
-
-    xTimerStart(hall_sensor_timer, 0);
+    if (event->data.cccd_write.notifications_enabled) {
+        xTimerStart(hall_sensor_timer, 0);
+    } else {
+        xTimerStop(hall_sensor_timer, 0);
+    }
 }
 
 static void hall_sensor_timeout_handler(TimerHandle_t xTimer) {
     auto val = hallSensor.read();
-    NRF_LOG_INFO("Sensor val: 0x%04X", val);
     ble_remote::update_sensor_value(val);
 }

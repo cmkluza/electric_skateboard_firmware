@@ -39,9 +39,9 @@ bool record_is_present(std::uint16_t file_id, std::uint16_t record_key,
 /**
  * Reads data from an FDS record.
  *
- * @param[in] desc       the record descriptor to be read.
- * @param[out] buffer    pointer to be written to.
- * @param[in] buffer_len size to be read.
+ * @param[in]  desc       the record descriptor to be read.
+ * @param[out] buffer     pointer to be written to.
+ * @param[in]  buffer_len size to be read.
  *
  * @return NRF_SUCCESS if the read was successful, or an error code.
  */
