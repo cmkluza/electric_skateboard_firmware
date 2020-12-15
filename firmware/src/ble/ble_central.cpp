@@ -15,8 +15,11 @@
 #include <nrf_assert.h>
 #include <nrf_ble_gatt.h>
 #include <nrf_ble_gq.h>
-#include <nrf_log.h>
 #include <nrf_ble_scan.h>
+
+#include "logger.hpp"
+
+using logger::Level;
 
 namespace ble_central {
 
@@ -66,7 +69,7 @@ void set_addr_scan_filter(const ble_gap_addr_t &addr) {
     /* SCAN_ADDR_FILTER takes a (uint8_t *) */
     nrf_ble_scan_filter_set(g_scan, SCAN_ADDR_FILTER, addr.addr);
 
-    NRF_LOG_INFO("Scan filter addr");
+    logger::log<Level::INFO>("Scan filter addr");
 }
 
 void set_uuid_appearance_scan_filter(const ble_uuid_t &uuid, std::uint16_t appearance) {
@@ -83,13 +86,13 @@ void set_uuid_appearance_scan_filter(const ble_uuid_t &uuid, std::uint16_t appea
     /* SCAN_APPEARANCE_FILTER takes a (uint16_t *) */
     nrf_ble_scan_filter_set(g_scan, SCAN_APPEARANCE_FILTER, &appearance);
 
-    NRF_LOG_INFO("Scan filter UUID + appearance");
+    logger::log<Level::INFO>("Scan filter UUID + appearance");
 }
 
 void begin_scanning() {
     ASSERT(g_scan != nullptr);
     APP_ERROR_CHECK(nrf_ble_scan_start(g_scan));
-    NRF_LOG_INFO("%s", __func__);
+    logger::log<Level::INFO>("%s", __func__);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

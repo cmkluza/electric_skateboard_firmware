@@ -8,7 +8,9 @@
 #include "ble_es_client.hpp"
 
 #include <ble_srv_common.h>
-#include <nrf_log.h>
+
+#include "logger.hpp"
+using logger::Level;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Implementations
@@ -56,7 +58,7 @@ void BLEESClient::event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
                 APP_ERROR_HANDLER(gattc_evt.gatt_status);
             }
 
-            NRF_LOG_INFO("Recieved notification handle %04X", hvx_evt.handle);
+            logger::log<Level::INFO>("Recieved notification handle %04X", hvx_evt.handle);
 
             if (hvx_evt.handle == _this->_es_hall_handle) {
                 if (_this->_callback) {
@@ -66,7 +68,7 @@ void BLEESClient::event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
 
             auto ret = sd_ble_gattc_hv_confirm(gattc_evt.conn_handle, hvx_evt.handle);
             if (ret != NRF_SUCCESS) {
-                NRF_LOG_INFO("%s::sd_ble_gattc_hv_confirm: 0x%08X", ret);
+                logger::log<Level::INFO>("%s::sd_ble_gattc_hv_confirm: 0x%08X", ret);
             }
         } break;
     }
@@ -80,7 +82,7 @@ void BLEESClient::on_db_discovery_evt(const ble_db_discovery_evt_t *p_evt) {
             if (discovered_db.srv_uuid.uuid == ble_es_common::UUID_SERVICE &&
                 discovered_db.srv_uuid.type == ble_es_common::uuid_type())
             { // NOLINT
-                NRF_LOG_DEBUG("DB discovery complete");
+                logger::log<Level::DEBUG>("DB discovery complete");
                 const auto &characteristics = discovered_db.charateristics;
 
                 for (unsigned i = 0; i < discovered_db.char_count; ++i) {
@@ -133,8 +135,8 @@ void BLEESClient::subscribe_to_notifications() {
 
     auto ret = nrf_ble_gq_item_add(_gatt_queue, &cccd_req, _conn_handle);
     if (ret != NRF_SUCCESS) {
-        NRF_LOG_INFO("%s::nrf_ble_gq_item_add: 0x%08X", __func__, ret);
+        logger::log<Level::INFO>("%s::nrf_ble_gq_item_add: 0x%08X", __func__, ret);
     }
 
-    NRF_LOG_DEBUG("Subscribed to CCCD notifications");
+    logger::log<Level::DEBUG>("Subscribed to CCCD notifications");
 }

@@ -12,11 +12,27 @@
 #include <bsp_btn_ble.h>
 #include <nrf.h>
 #include <nrf_drv_clock.h>
-#include <nrf_log.h>
 #include <nrf_soc.h>
 #include <sdk_errors.h>
 
+#include "logger.hpp"
+using logger::Level;
+using logger::Option;
+
 namespace util {
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Private Prototypes
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Helper to call the log function with the no header option.
+ *
+ * @param[in] fmt  the string format for the log
+ * @param[in] args arguments for the formatted log
+ */
+template <typename ... Args>
+static inline void log_raw(const char *fmt, Args ... args);
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Implementations
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,14 +52,15 @@ void log_uuid(const ble_uuid128_t *uuid) {
      *    # bytes:     4   - 2  - 2  - 2  -    6
      * Bytes are stored in uuid structure backwards
      */
-    NRF_LOG_RAW_INFO("128-bit UUID: %02X%02X%02X%02X",
-                     uuid->uuid128[15], uuid->uuid128[14], uuid->uuid128[13], uuid->uuid128[12]);
-    NRF_LOG_RAW_INFO("-%02X%02X", uuid->uuid128[11], uuid->uuid128[10]);
-    NRF_LOG_RAW_INFO("-%02X%02X", uuid->uuid128[9], uuid->uuid128[8]);
-    NRF_LOG_RAW_INFO("-%02X%02X", uuid->uuid128[7], uuid->uuid128[6]);
-    NRF_LOG_RAW_INFO("-%02X%02X%02X%02X%02X%02X\n",
-                     uuid->uuid128[5], uuid->uuid128[4], uuid->uuid128[3],
-                     uuid->uuid128[2], uuid->uuid128[1], uuid->uuid128[0]);
+    log_raw("128-bit UUID: %02X%02X%02X%02X",
+            uuid->uuid128[15], uuid->uuid128[14],
+            uuid->uuid128[13], uuid->uuid128[12]);
+    log_raw("-%02X%02X", uuid->uuid128[11], uuid->uuid128[10]);
+    log_raw("-%02X%02X", uuid->uuid128[9], uuid->uuid128[8]);
+    log_raw("-%02X%02X", uuid->uuid128[7], uuid->uuid128[6]);
+    log_raw("-%02X%02X%02X%02X%02X%02X\n",
+            uuid->uuid128[5], uuid->uuid128[4], uuid->uuid128[3],
+            uuid->uuid128[2], uuid->uuid128[1], uuid->uuid128[0]);
 }
 
 void log_ble_data(const ble_data_t *data) {
@@ -58,7 +75,8 @@ void log_ble_data(const ble_data_t *data) {
     len = len < 30 ? len : 30;
     memcpy(name, name_data, len);
 
-    NRF_LOG_RAW_INFO("Name: %s\n", NRF_LOG_PUSH(name));
+    log_raw("Name: %s\n", logger::push(name));
+    log_raw("Name: %s\n", logger::push(name));
 
     /* Log any 16-bit UUIDs */
     offset = {};
@@ -72,8 +90,8 @@ void log_ble_data(const ble_data_t *data) {
     if (0 != offset) {
         std::uint8_t *uuid_data = &data->p_data[offset];
         for (std::uint16_t uuid_offset = 0; uuid_offset < len; uuid_offset += UUID16_LEN) {
-            NRF_LOG_RAW_INFO("16-bit UUID: 0x%02X%02X\n",
-                             uuid_data[uuid_offset + 1], uuid_data[uuid_offset]);
+            log_raw("16-bit UUID: 0x%02X%02X\n", uuid_data[uuid_offset + 1],
+                     uuid_data[uuid_offset]);
         }
     }
 
@@ -100,9 +118,17 @@ void log_ble_data(const ble_data_t *data) {
     len = ble_advdata_search(data->p_data, data->len, &offset,
                              BLE_GAP_AD_TYPE_MANUFACTURER_SPECIFIC_DATA);
     if (0 != offset) {
-        NRF_LOG_RAW_INFO("MFG Data: ");
-        NRF_LOG_HEXDUMP_INFO(&data->p_data[offset], len);
+        log_raw("MFG Data: ");
+        logger::hexdump<Level::INFO>(&data->p_data[offset], len);
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Public Implementations
+////////////////////////////////////////////////////////////////////////////////////////////////////
+template <typename ... Args>
+static inline void log_raw(const char *fmt, Args ... args) {
+    logger::log<Level::INFO, Option::NO_HEADER>(fmt, args...);
 }
 
 }  // namespace util

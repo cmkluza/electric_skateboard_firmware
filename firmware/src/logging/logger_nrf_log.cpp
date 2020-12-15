@@ -1,5 +1,6 @@
 /*
- * logger.cpp - utilities for logging.
+ * logger_nrf_log.cpp - logging implementation that passes through to nRF's log library and
+ *                      FreeRTOS.
  *
  * Copyright (c) 2020 Cameron Kluza
  * Distributed under the MIT license (see LICENSE or https://opensource.org/licenses/MIT)

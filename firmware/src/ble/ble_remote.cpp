@@ -13,7 +13,6 @@
 #include <nrf_ble_gatt.h>
 #include <nrf_ble_gq.h>
 #include <nrf_ble_scan.h>
-#include <nrf_log.h>
 #include <nrf_sdh_ble.h>
 #include <nrf_sdh_freertos.h>
 
@@ -25,7 +24,10 @@
 #include "ble_events.hpp"
 #include "config/app_config.h"
 #include "es_fds.hpp"
+#include "logger.hpp"
 #include "util.hpp"
+
+using logger::Level;
 
 namespace ble_remote {
 
@@ -147,8 +149,9 @@ static void ble_event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
             const auto &gap_evt = p_ble_evt->evt.gap_evt;
             const auto &connected_evt = gap_evt.params.connected;
 
-            NRF_LOG_INFO("Connected to " MAC_FMT, MAC_ARGS(connected_evt.peer_addr.addr));
-            NRF_LOG_INFO("Connection handle 0x%X", gap_evt.conn_handle);
+            logger::log<Level::INFO>("Connected to " MAC_FMT,
+                                     MAC_ARGS(connected_evt.peer_addr.addr));
+            logger::log<Level::INFO>("Connection handle 0x%X", gap_evt.conn_handle);
 
             g_paired_addr = connected_evt.peer_addr;
 
@@ -165,8 +168,8 @@ static void ble_event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
             const auto &gap_evt = p_ble_evt->evt.gap_evt;
             const auto &disconnected_evt = gap_evt.params.disconnected;
 
-            NRF_LOG_INFO("Disconnected from 0x%X (reason: 0x%X)",
-                         gap_evt.conn_handle, disconnected_evt.reason);
+            logger::log<Level::INFO>("Disconnected from 0x%X (reason: 0x%X)",
+                                     gap_evt.conn_handle, disconnected_evt.reason);
 
             event.event = ble_events::Events::DISCONNECTED;
             event.data.disconnected.address = g_paired_addr.addr;
@@ -184,7 +187,7 @@ static void ble_event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
 
             /* Handle connection timeout */
             if (timeout_evt.src == BLE_GAP_TIMEOUT_SRC_CONN) {
-                NRF_LOG_INFO("Timed out connecting");
+                logger::log<Level::INFO>("Timed out connecting");
                 // TODO(CMK) 07/11/20: retry connection?
             }
         } break;
@@ -212,7 +215,7 @@ static void ble_event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
             const auto &gattc_evt = p_ble_evt->evt.gattc_evt;
 
             /* Lost communication to peripheral */
-            NRF_LOG_INFO("GATTC timeout");
+            logger::log<Level::INFO>("GATTC timeout");
             APP_ERROR_CHECK(sd_ble_gap_disconnect(gattc_evt.conn_handle,
                              BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION));
         } break;
@@ -224,7 +227,7 @@ static void ble_event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
             const auto &gatts_evt = p_ble_evt->evt.gatts_evt;
 
             /* Lost communication to peripheral */
-            NRF_LOG_INFO("GATTS timeout");
+            logger::log<Level::INFO>("GATTS timeout");
             APP_ERROR_CHECK(sd_ble_gap_disconnect(gatts_evt.conn_handle,
                              BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION));
         } break;
@@ -236,8 +239,8 @@ static void scan_event_handler(scan_evt_t const *p_scan_evt) {
         case NRF_BLE_SCAN_EVT_FILTER_MATCH:
             {
                 auto *adv_report = p_scan_evt->params.filter_match.p_adv_report;
-                NRF_LOG_INFO("SCANNED: " MAC_FMT,
-                             MAC_ARGS(adv_report->peer_addr.addr));
+                logger::log<Level::INFO>("SCANNED: " MAC_FMT,
+                                         MAC_ARGS(adv_report->peer_addr.addr));
                 util::log_ble_data(&adv_report->data);
             }
             break;

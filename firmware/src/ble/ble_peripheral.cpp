@@ -27,13 +27,15 @@
 // #include <ble_cts_c.h>
 #include <bsp.h>
 #include <nrf_ble_gatt.h>
-#include <nrf_log.h>
 #include <nrf_sdh.h>
 #include <nrf_sdh_ble.h>
 
 #include "ble_es_common.hpp"
 #include "config/app_config.h"
+#include "logger.hpp"
 #include "util.hpp"
+
+using logger::Level;
 
 namespace ble_peripheral {
 
@@ -105,7 +107,7 @@ void advertise_name() {
 
     APP_ERROR_CHECK(ble_advertising_advdata_update(g_advertising, &advdata, nullptr));
 
-    NRF_LOG_INFO("advertising name");
+    logger::log<Level::INFO>("advertising name");
 }
 
 void advertise_uuid_appearance(ble_uuid_t *uuid) {
@@ -119,13 +121,13 @@ void advertise_uuid_appearance(ble_uuid_t *uuid) {
 
     APP_ERROR_CHECK(ble_advertising_advdata_update(g_advertising, &advdata, nullptr));
 
-    NRF_LOG_INFO("advertising UUID + appearance");
+    logger::log<Level::INFO>("advertising UUID + appearance");
 }
 
 void start_advertising() {
     APP_ERROR_CHECK(ble_advertising_start(g_advertising, BLE_ADV_MODE_FAST));
 
-    NRF_LOG_INFO("%s", __func__);
+    logger::log<Level::INFO>("%s", __func__);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

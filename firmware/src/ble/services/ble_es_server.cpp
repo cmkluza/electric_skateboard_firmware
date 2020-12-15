@@ -12,9 +12,11 @@
 #include <ble_gatts.h>
 #include <ble_srv_common.h>
 #include <ble_types.h>
-#include <nrf_log.h>
 
 #include "ble_events.hpp"
+#include "logger.hpp"
+
+using logger::Level;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Implementations
@@ -83,16 +85,16 @@ void BLEESServer::init() {
 // TODO(CMK) 07/27/20: verify sd_ble_gatts_hvx both updates the value and issues the notification
 void BLEESServer::update_sensor_value(HallSensor::type new_value) {
     if (_conn_handle == BLE_CONN_HANDLE_INVALID) {
-        NRF_LOG_WARNING("Attempted update sensor char while disconnected");
+        logger::log<Level::WARNING>("Attempted update sensor char while disconnected");
         return;
     }
 
     if (!_notifications_enabled) {
-        NRF_LOG_WARNING("Attempted update sensor char before updates are enabled");
+        logger::log<Level::WARNING>("Attempted update sensor char before updates are enabled");
         return;
     }
 
-    NRF_LOG_INFO("%s: 0x%04X", __func__, new_value);
+    logger::log<Level::INFO>("%s: 0x%04X", __func__, new_value);
 
     std::uint16_t len = { sizeof(new_value) };
     std::uint8_t bytes[sizeof(new_value)];
@@ -107,8 +109,9 @@ void BLEESServer::update_sensor_value(HallSensor::type new_value) {
     };
 
     auto ret = sd_ble_gatts_hvx(_conn_handle, &params);
-    if (ret != NRF_SUCCESS)
-        NRF_LOG_INFO("%s::sd_ble_gatts_hvx: 0x%08X", __func__, ret);
+    if (ret != NRF_SUCCESS) {
+        logger::log<Level::INFO>("%s::sd_ble_gatts_hvx: 0x%08X", __func__, ret);
+    }
 }
 
 void BLEESServer::event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
@@ -134,8 +137,8 @@ void BLEESServer::event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
             if (write_evt.handle == _this->_sensor_char_handles.cccd_handle &&
                 write_evt.len == 2) {
                 _this->_notifications_enabled = ble_srv_is_notification_enabled(write_evt.data);
-                NRF_LOG_DEBUG("CCCD written - notifications enabled: %d",
-                             _this->_notifications_enabled);
+                logger::log<Level::DEBUG>("CCCD written - notifications enabled: %d",
+                                          _this->_notifications_enabled);
 
                 using namespace ble_events;
                 ble_events::Event event {
@@ -153,7 +156,7 @@ void BLEESServer::event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
         case BLE_GATTS_EVT_SYS_ATTR_MISSING: {
             APP_ERROR_CHECK(sd_ble_gatts_sys_attr_set(_this->_conn_handle, nullptr, 0,
                 BLE_GATTS_SYS_ATTR_FLAG_SYS_SRVCS | BLE_GATTS_SYS_ATTR_FLAG_USR_SRVCS));
-            NRF_LOG_DEBUG("Updated sys attr");
+            logger::log<Level::DEBUG>("Updated sys attr");
         } break;
     }
 }

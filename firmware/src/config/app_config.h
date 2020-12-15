@@ -130,8 +130,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**< Which pin the UART logger should transmit on - uses board-specific definition */
-#ifndef NRF_LOG_BACKEND_UART_TX_PIN
-#define NRF_LOG_BACKEND_UART_TX_PIN TX_PIN_NUMBER
+#ifdef NRF_LOG_BACKEND_UART_TX_PIN
+#   undef NRF_LOG_BACKEND_UART_TX_PIN
 #endif
+#define NRF_LOG_BACKEND_UART_TX_PIN TX_PIN_NUMBER
 
 #endif // APP_CONFIG_H

@@ -10,8 +10,10 @@
 #include "es_fds.hpp"
 
 #include <fds.h>
-#include <nrf_log.h>
 #include <nrf_strerror.h>
+
+#include "logger.hpp"
+using logger::Level;
 
 namespace es_fds {
 
@@ -65,16 +67,16 @@ ret_code_t read_record(fds_record_desc_t *desc, std::uint8_t *buffer, size_t buf
     fds_flash_record_t config = {};
 
     if (auto ret_code = fds_record_open(desc, &config); ret_code != NRF_SUCCESS) {
-        NRF_LOG_WARNING("%s::fds_record_open failed: %s",
-            __func__, nrf_strerror_get(ret_code));
+        logger::log<Level::WARNING>("%s::fds_record_open failed: %s",
+                                    __func__, nrf_strerror_get(ret_code));
         return ret_code;
     }
 
     memcpy(buffer, config.p_data, buffer_len);
 
     if (auto ret_code = fds_record_close(desc); ret_code != NRF_SUCCESS) {
-        NRF_LOG_WARNING("%s::fds_record_close failed: %s",
-            __func__, nrf_strerror_get(ret_code));
+        logger::log<Level::WARNING>("%s::fds_record_close failed: %s",
+                                    __func__, nrf_strerror_get(ret_code));
         return ret_code;
     }
 
@@ -91,10 +93,10 @@ void idle() {
 
 static void event_handler(fds_evt_t const *p_evt) {
     if (NRF_SUCCESS == p_evt->result) {
-        NRF_LOG_INFO("%s successful event: %d", __FILE__, p_evt->id);
+        logger::log<Level::INFO>("%s successful event: %d", __FILE__, p_evt->id);
     } else {
-        NRF_LOG_WARNING("%s unsuccessful event: %d %s",
-            __FILE__, p_evt->id, nrf_strerror_get(p_evt->result));
+        logger::log<Level::WARNING>("%s unsuccessful event: %d %s",
+                                    __FILE__, p_evt->id, nrf_strerror_get(p_evt->result));
     }
 
     switch (p_evt->id) {

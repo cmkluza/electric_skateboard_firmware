@@ -243,10 +243,11 @@
     </folder>
     <folder Name="Application">
       <folder Name="logging">
-        <file file_name="../src/logging/logger.cpp" />
         <file file_name="../src/logging/logger.hpp" />
         <file file_name="../src/logging/error_handler.cpp" />
         <file file_name="../src/logging/error_handler.hpp" />
+        <file file_name="../src/logging/logger_nrf_log.cpp" />
+        <file file_name="../src/logging/logger_nrf_log.hpp" />
       </folder>
       <folder Name="BLE">
         <file file_name="../src/ble/ble_peripheral.cpp" />
@@ -255,7 +256,6 @@
         <file file_name="../src/ble/ble_central.hpp" />
         <file file_name="../src/ble/ble_remote.cpp" />
         <file file_name="../src/ble/ble_remote.hpp" />
-        <file file_name="../src/ble/ble_common.cpp" />
         <file file_name="../src/ble/ble_common.hpp" />
         <file file_name="../src/ble/ble_events.cpp" />
         <file file_name="../src/ble/ble_events.hpp" />
@@ -265,6 +265,7 @@
           <file file_name="../src/ble/services/ble_es_server.cpp" />
           <file file_name="../src/ble/services/ble_es_server.hpp" />
         </folder>
+        <file file_name="../src/ble/ble_common.cpp" />
       </folder>
       <file file_name="../src/util.cpp" />
       <file file_name="../src/util.hpp" />
@@ -623,10 +624,11 @@
     </folder>
     <folder Name="Application">
       <folder Name="logging">
-        <file file_name="../src/logging/logger.cpp" />
         <file file_name="../src/logging/logger.hpp" />
         <file file_name="../src/logging/error_handler.cpp" />
         <file file_name="../src/logging/error_handler.hpp" />
+        <file file_name="../src/logging/logger_nrf_log.cpp" />
+        <file file_name="../src/logging/logger_nrf_log.hpp" />
       </folder>
       <folder Name="BLE">
         <file file_name="../src/ble/ble_peripheral.cpp" />
