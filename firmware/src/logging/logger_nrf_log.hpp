@@ -8,10 +8,10 @@
 
 #pragma once
 
+#include <nrf_log.h>
+
 #include <cstddef>
 #include <cstdint>
-
-#include "nrf_log.h"
 
 namespace logger {
 

@@ -144,8 +144,8 @@ static void init_paired_addr() {
 }
 
 static void ble_event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
-    using namespace ble_events;
-    Event event {};
+    using ble_events::Events;
+    ble_events::Event event {};
 
     switch (p_ble_evt->header.evt_id) {
         /** BLE GAP events */

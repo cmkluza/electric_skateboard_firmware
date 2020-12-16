@@ -6,7 +6,7 @@
  * Distributed under the MIT license (see LICENSE or https://opensource.org/licenses/MIT)
  */
 
-#include "logger.hpp"
+#include "logger.hpp"  // NOLINT
 
 #include <sdk_config.h>
 

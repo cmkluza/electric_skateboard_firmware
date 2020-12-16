@@ -129,7 +129,7 @@
 // SDK Config Definitions
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/**< Which pin the UART logger should transmit on - uses board-specific definition */
+/**< Which pin the UART logger should transmit on - use board-specific definition */
 #ifdef NRF_LOG_BACKEND_UART_TX_PIN
 #   undef NRF_LOG_BACKEND_UART_TX_PIN
 #endif

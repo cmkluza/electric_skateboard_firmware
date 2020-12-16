@@ -140,7 +140,7 @@ void BLEESServer::event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
                 logger::log<Level::DEBUG>("CCCD written - notifications enabled: %d",
                                           _this->_notifications_enabled);
 
-                using namespace ble_events;
+                using ble_events::Events;
                 ble_events::Event event {
                     .event = Events::CCCD_WRITE,
                     .data = {
