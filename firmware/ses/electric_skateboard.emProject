@@ -308,8 +308,6 @@
       <folder Name="common">
         <file file_name="../sdk/components/ble/common/ble_advdata.c" />
         <file file_name="../sdk/components/ble/common/ble_advdata.h" />
-        <file file_name="../sdk/components/ble/common/ble_conn_params.c" />
-        <file file_name="../sdk/components/ble/common/ble_conn_params.h" />
         <file file_name="../sdk/components/ble/common/ble_conn_state.c" />
         <file file_name="../sdk/components/ble/common/ble_conn_state.h" />
         <file file_name="../sdk/components/ble/common/ble_srv_common.c" />
