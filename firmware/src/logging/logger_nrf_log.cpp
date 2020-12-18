@@ -53,7 +53,7 @@ void init() {
 
     // TODO(CMK) 06/18/20: logger flash backend
 
-    if (pdPASS != xTaskCreate(logger_thread, "Logger", 256, nullptr, 1, &logger_thandle)) {
+    if (pdPASS != xTaskCreate(logger_thread, "Logger", 256, nullptr, 3, &logger_thandle)) {
         APP_ERROR_HANDLER(NRF_ERROR_NO_MEM);
     }
 }

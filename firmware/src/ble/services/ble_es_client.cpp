@@ -82,7 +82,7 @@ void BLEESClient::on_db_discovery_evt(const ble_db_discovery_evt_t *p_evt) {
             if (discovered_db.srv_uuid.uuid == ble_es_common::UUID_SERVICE &&
                 discovered_db.srv_uuid.type == ble_es_common::uuid_type())
             { // NOLINT
-                logger::log<Level::DEBUG>("DB discovery complete");
+                logger::log<Level::DBG>("DB discovery complete");
                 const auto &characteristics = discovered_db.charateristics;
 
                 for (unsigned i = 0; i < discovered_db.char_count; ++i) {
@@ -138,5 +138,5 @@ void BLEESClient::subscribe_to_notifications() {
         logger::log<Level::INFO>("%s::nrf_ble_gq_item_add: 0x%08X", __func__, ret);
     }
 
-    logger::log<Level::DEBUG>("Subscribed to CCCD notifications");
+    logger::log<Level::DBG>("Subscribed to CCCD notifications");
 }

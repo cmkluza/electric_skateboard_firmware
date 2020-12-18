@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 - 2019, Nordic Semiconductor ASA
+ * Copyright (c) 2012 - 2020, Nordic Semiconductor ASA
  *
  * All rights reserved.
  *
@@ -42,7 +42,7 @@
 #include "app_button.h"
 #include "app_timer.h"
 #include "app_error.h"
-#include "nrfx_gpiote.h"
+#include "nrf_drv_gpiote.h"
 #include "nrf_assert.h"
 
 #define NRF_LOG_MODULE_NAME app_button
@@ -226,7 +226,7 @@ static void detection_delay_timeout_handler(void * p_context)
     for (int i = 0; i < m_button_count; i++)
     {
         app_button_cfg_t const * p_btn = &mp_buttons[i];
-        bool is_set = nrfx_gpiote_in_is_set(p_btn->pin_no);
+        bool is_set = nrf_drv_gpiote_in_is_set(p_btn->pin_no);
         bool is_active = !((p_btn->active_state == APP_BUTTON_ACTIVE_HIGH) ^ is_set);
         evt_handle(p_btn->pin_no, is_active);
     }
@@ -242,10 +242,10 @@ static void detection_delay_timeout_handler(void * p_context)
 }
 
 /* GPIOTE event is used only to start periodic timer when first button is activated. */
-static void gpiote_event_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
+static void gpiote_event_handler(nrf_drv_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
 {
     app_button_cfg_t const * p_btn = button_get(pin);
-    bool is_set = nrfx_gpiote_in_is_set(p_btn->pin_no);
+    bool is_set = nrf_drv_gpiote_in_is_set(p_btn->pin_no);
     bool is_active = !((p_btn->active_state == APP_BUTTON_ACTIVE_HIGH) ^ is_set);
 
     /* If event indicates that pin is active and no other pin is active start the timer. All
@@ -269,9 +269,9 @@ uint32_t app_button_init(app_button_cfg_t const *       p_buttons,
         return NRF_ERROR_INVALID_PARAM;
     }
 
-    if (!nrfx_gpiote_is_init())
+    if (!nrf_drv_gpiote_is_init())
     {
-        err_code = nrfx_gpiote_init();
+        err_code = nrf_drv_gpiote_init();
         VERIFY_SUCCESS(err_code);
     }
 
@@ -288,13 +288,13 @@ uint32_t app_button_init(app_button_cfg_t const *       p_buttons,
         app_button_cfg_t const * p_btn = &p_buttons[button_count];
 
 #if defined(BUTTON_HIGH_ACCURACY_ENABLED) && (BUTTON_HIGH_ACCURACY_ENABLED == 1)
-        nrfx_gpiote_in_config_t config = NRFX_GPIOTE_CONFIG_IN_SENSE_TOGGLE(p_btn->hi_accuracy);
+        nrf_drv_gpiote_in_config_t config = GPIOTE_CONFIG_IN_SENSE_TOGGLE(p_btn->hi_accuracy);
 #else
-        nrfx_gpiote_in_config_t config = NRFX_GPIOTE_CONFIG_IN_SENSE_TOGGLE(false);
+        nrf_drv_gpiote_in_config_t config = GPIOTE_CONFIG_IN_SENSE_TOGGLE(false);
 #endif
         config.pull = p_btn->pull_cfg;
 
-        err_code = nrfx_gpiote_in_init(p_btn->pin_no, &config, gpiote_event_handler);
+        err_code = nrf_drv_gpiote_in_init(p_btn->pin_no, &config, gpiote_event_handler);
         VERIFY_SUCCESS(err_code);
     }
 
@@ -311,7 +311,7 @@ uint32_t app_button_enable(void)
     uint32_t i;
     for (i = 0; i < m_button_count; i++)
     {
-        nrfx_gpiote_in_event_enable(mp_buttons[i].pin_no, true);
+        nrf_drv_gpiote_in_event_enable(mp_buttons[i].pin_no, true);
     }
 
     return NRF_SUCCESS;
@@ -325,7 +325,7 @@ uint32_t app_button_disable(void)
     uint32_t i;
     for (i = 0; i < m_button_count; i++)
     {
-       nrfx_gpiote_in_event_disable(mp_buttons[i].pin_no);
+       nrf_drv_gpiote_in_event_disable(mp_buttons[i].pin_no);
     }
     CRITICAL_REGION_ENTER();
     m_pin_active = 0;
@@ -342,7 +342,7 @@ bool app_button_is_pushed(uint8_t button_id)
     ASSERT(mp_buttons != NULL);
 
     app_button_cfg_t const * p_btn = &mp_buttons[button_id];
-    bool is_set = nrfx_gpiote_in_is_set(p_btn->pin_no);
+    bool is_set = nrf_drv_gpiote_in_is_set(p_btn->pin_no);
 
     return !(is_set ^ (p_btn->active_state == APP_BUTTON_ACTIVE_HIGH));
 }

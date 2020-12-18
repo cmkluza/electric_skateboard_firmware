@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014 - 2019, Nordic Semiconductor ASA
+ * Copyright (c) 2014 - 2020, Nordic Semiconductor ASA
  *
  * All rights reserved.
  *
@@ -476,6 +476,7 @@ uint32_t bsp_indication_set(bsp_indication_t indicate)
 #endif // LEDS_NUMBER > 0 && !(defined BSP_SIMPLE)
     return err_code;
 }
+
 
 uint32_t bsp_init(uint32_t type, bsp_event_callback_t callback)
 {

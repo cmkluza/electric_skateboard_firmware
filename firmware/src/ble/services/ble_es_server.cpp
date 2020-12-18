@@ -137,7 +137,7 @@ void BLEESServer::event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
             if (write_evt.handle == _this->_sensor_char_handles.cccd_handle &&
                 write_evt.len == 2) {
                 _this->_notifications_enabled = ble_srv_is_notification_enabled(write_evt.data);
-                logger::log<Level::DEBUG>("CCCD written - notifications enabled: %d",
+                logger::log<Level::DBG>("CCCD written - notifications enabled: %d",
                                           _this->_notifications_enabled);
 
                 using ble_events::Events;
@@ -156,7 +156,7 @@ void BLEESServer::event_handler(ble_evt_t const *p_ble_evt, void *p_context) {
         case BLE_GATTS_EVT_SYS_ATTR_MISSING: {
             APP_ERROR_CHECK(sd_ble_gatts_sys_attr_set(_this->_conn_handle, nullptr, 0,
                 BLE_GATTS_SYS_ATTR_FLAG_SYS_SRVCS | BLE_GATTS_SYS_ATTR_FLAG_USR_SRVCS));
-            logger::log<Level::DEBUG>("Updated sys attr");
+            logger::log<Level::DBG>("Updated sys attr");
         } break;
     }
 }

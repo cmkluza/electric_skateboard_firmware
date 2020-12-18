@@ -14,7 +14,7 @@ namespace logger {
 // Definitions
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 enum class Level {
-    DEBUG,      /**< For verbose debugging info */
+    DBG,      /**< For verbose debugging info */
     INFO,       /**< For general info */
     WARNING,    /**< For erraneous behavior that can be recovered from */
     ERROR       /**< For erraneous behavior that cannot be recovered from */

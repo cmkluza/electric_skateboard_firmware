@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014 - 2019, Nordic Semiconductor ASA
+ * Copyright (c) 2014 - 2020, Nordic Semiconductor ASA
  *
  * All rights reserved.
  *
@@ -43,11 +43,56 @@
 #include "nrf_gpio.h"
 #include "nordic_common.h"
 
-/* CMK - moved to boards_inc.h to allow more flexibility
-   (including boards.h in app_config.h caused issues with nRF's 
-    apply_old_config.h being included before sdk_config.h) */
+#if defined(BOARD_NRF6310)
+  #include "nrf6310.h"
+#elif defined(BOARD_PCA10000)
+  #include "pca10000.h"
+#elif defined(BOARD_PCA10001)
+  #include "pca10001.h"
+#elif defined(BOARD_PCA10002)
+  #include "pca10000.h"
+#elif defined(BOARD_PCA10003)
+  #include "pca10003.h"
+#elif defined(BOARD_PCA20006)
+  #include "pca20006.h"
+#elif defined(BOARD_PCA10028)
+  #include "pca10028.h"
+#elif defined(BOARD_PCA10031)
+  #include "pca10031.h"
+#elif defined(BOARD_PCA10036)
+  #include "pca10036.h"
+#elif defined(BOARD_PCA10040)
+  #include "pca10040.h"
+#elif defined(BOARD_PCA10056)
+  #include "pca10056.h"
+#elif defined(BOARD_PCA10100)
+  #include "pca10100.h"
+#elif defined(BOARD_PCA10112)
+  #include "pca10112.h"  
+#elif defined(BOARD_PCA20020)
+  #include "pca20020.h"
+#elif defined(BOARD_PCA10059)
+  #include "pca10059.h"
+#elif defined(BOARD_WT51822)
+  #include "wt51822.h"
+#elif defined(BOARD_N5DK1)
+  #include "n5_starterkit.h"
+#elif defined (BOARD_D52DK1)
+  #include "d52_starterkit.h"
+#elif defined (BOARD_ARDUINO_PRIMO)
+  #include "arduino_primo.h"
+#elif defined (CUSTOM_BOARD_INC)
+  #include STRINGIFY(CUSTOM_BOARD_INC.h)
+#elif defined(BOARD_CUSTOM)
+  #include "custom_board.h"
+#else
+#error "Board is not defined"
 
-#include "boards_inc.h"
+#endif
+
+#if defined (SHIELD_BSP_INC)
+  #include STRINGIFY(SHIELD_BSP_INC.h)
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -290,21 +335,26 @@ uint32_t bsp_board_button_idx_to_pin(uint32_t button_idx);
                         BSP_BUTTON_6_MASK | BSP_BUTTON_7_MASK)
 
 
+/* This macro is supporting only P0 and should not be used if LEDs are on other ports. */
 #define LEDS_OFF(leds_mask) do {  ASSERT(sizeof(leds_mask) == 4);                     \
                         NRF_GPIO->OUTSET = (leds_mask) & (LEDS_MASK & LEDS_INV_MASK); \
                         NRF_GPIO->OUTCLR = (leds_mask) & (LEDS_MASK & ~LEDS_INV_MASK); } while (0)
 
+/* This macro is supporting only P0 and should not be used if LEDs are on other ports. */
 #define LEDS_ON(leds_mask) do {  ASSERT(sizeof(leds_mask) == 4);                     \
                        NRF_GPIO->OUTCLR = (leds_mask) & (LEDS_MASK & LEDS_INV_MASK); \
                        NRF_GPIO->OUTSET = (leds_mask) & (LEDS_MASK & ~LEDS_INV_MASK); } while (0)
 
+/* This macro is supporting only P0 and should not be used if LEDs are on other ports. */
 #define LED_IS_ON(leds_mask) ((leds_mask) & (NRF_GPIO->OUT ^ LEDS_INV_MASK) )
 
+/* This macro is supporting only P0 and should not be used if LEDs are on other ports. */
 #define LEDS_INVERT(leds_mask) do { uint32_t gpio_state = NRF_GPIO->OUT;      \
                               ASSERT(sizeof(leds_mask) == 4);                 \
                               NRF_GPIO->OUTSET = ((leds_mask) & ~gpio_state); \
                               NRF_GPIO->OUTCLR = ((leds_mask) & gpio_state); } while (0)
 
+/* This macro is supporting only P0 and should not be used if LEDs are on other ports. */
 #define LEDS_CONFIGURE(leds_mask) do { uint32_t pin;                  \
                                   ASSERT(sizeof(leds_mask) == 4);     \
                                   for (pin = 0; pin < 32; pin++)      \

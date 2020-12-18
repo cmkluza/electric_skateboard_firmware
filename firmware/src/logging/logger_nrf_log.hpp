@@ -46,7 +46,7 @@ static constexpr std::uint32_t get_severity() {
         return NRF_LOG_SEVERITY_INFO_RAW;
     }
 
-    if constexpr (level == Level::DEBUG) {
+    if constexpr (level == Level::DBG) {
         return NRF_LOG_SEVERITY_DEBUG;
     } else if constexpr (level == Level::INFO) {
         return NRF_LOG_SEVERITY_INFO;

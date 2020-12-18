@@ -14,6 +14,9 @@
 #include <nrf_log.h>
 #include <sdk_errors.h>
 
+// TODO - no?
+#include <nrf_stack_guard.h>
+
 #include <sensorsim.h>
 
 #include <FreeRTOS.h>
@@ -37,8 +40,12 @@ int main() {
     /* Early init */
     logger::init();
 
+    /* Stack guard - TODO - no? */
+    NRF_STACK_GUARD_INIT();
+
     /* Hardware and BSP initialization */
     util::clock_init();
+
     hallSensor.init();
     APP_ERROR_CHECK(app_timer_init());
     hall_sensor_timer = xTimerCreate("Hall sens",

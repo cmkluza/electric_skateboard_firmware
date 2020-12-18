@@ -13,7 +13,7 @@ extern "C" {
 
 #include "boards_gpio.h"
 
-#define UNUSED_PIN              (-1)
+#define UNUSED_PIN              (0)
 
 /* Nordic BSP definitions */
 #define LEDS_NUMBER             0

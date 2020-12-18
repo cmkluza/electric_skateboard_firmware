@@ -41,7 +41,6 @@
 #ifndef SDK_CONFIG_H
 #define SDK_CONFIG_H
 // <<< Use Configuration Wizard in Context Menu >>>\n
-#define USE_APP_CONFIG
 #ifdef USE_APP_CONFIG
 #include "app_config.h"
 #endif
@@ -682,7 +681,7 @@
 // <e> NRF_MPU_LIB_ENABLED - nrf_mpu_lib - Module for MPU
 //==========================================================
 #ifndef NRF_MPU_LIB_ENABLED
-#define NRF_MPU_LIB_ENABLED 0
+#define NRF_MPU_LIB_ENABLED 1
 #endif
 // <q> NRF_MPU_LIB_CLI_CMDS  - Enable CLI commands specific to the module.
 
@@ -696,7 +695,7 @@
 // <e> NRF_STACK_GUARD_ENABLED - nrf_stack_guard - Stack guard
 //==========================================================
 #ifndef NRF_STACK_GUARD_ENABLED
-#define NRF_STACK_GUARD_ENABLED 0
+#define NRF_STACK_GUARD_ENABLED 1
 #endif
 // <o> NRF_STACK_GUARD_CONFIG_SIZE  - Size of the stack guard.
 
@@ -6227,6 +6226,13 @@
 // <h> nRF_Libraries
 
 //==========================================================
+// <q> APP_FIFO_ENABLED  - app_fifo - Software FIFO implementation
+
+
+#ifndef APP_FIFO_ENABLED
+#define APP_FIFO_ENABLED 1
+#endif
+
 // <q> APP_GPIOTE_ENABLED  - app_gpiote - GPIOTE events dispatcher
 
 
@@ -6399,6 +6405,21 @@
 
 // </h>
 //==========================================================
+
+// </e>
+
+// <e> APP_UART_ENABLED - app_uart - UART driver
+//==========================================================
+#ifndef APP_UART_ENABLED
+#define APP_UART_ENABLED 0
+#endif
+// <o> APP_UART_DRIVER_INSTANCE  - UART instance used
+
+// <0=> 0
+
+#ifndef APP_UART_DRIVER_INSTANCE
+#define APP_UART_DRIVER_INSTANCE 0
+#endif
 
 // </e>
 
@@ -7966,7 +7987,7 @@
 // <e> NRF_LOG_USES_COLORS - If enabled then ANSI escape code for colors is prefixed to every string
 //==========================================================
 #ifndef NRF_LOG_USES_COLORS
-#define NRF_LOG_USES_COLORS 0
+#define NRF_LOG_USES_COLORS 1
 #endif
 // <o> NRF_LOG_COLOR_DEFAULT  - ANSI escape code prefix.
 
@@ -8092,7 +8113,7 @@
 // <e> NRF_STACK_GUARD_CONFIG_LOG_ENABLED - Enables logging in the module.
 //==========================================================
 #ifndef NRF_STACK_GUARD_CONFIG_LOG_ENABLED
-#define NRF_STACK_GUARD_CONFIG_LOG_ENABLED 0
+#define NRF_STACK_GUARD_CONFIG_LOG_ENABLED 1
 #endif
 // <o> NRF_STACK_GUARD_CONFIG_LOG_LEVEL  - Default Severity level
 
@@ -9351,7 +9372,7 @@
 // <e> APP_TIMER_CONFIG_LOG_ENABLED - Enables logging in the module.
 //==========================================================
 #ifndef APP_TIMER_CONFIG_LOG_ENABLED
-#define APP_TIMER_CONFIG_LOG_ENABLED 0
+#define APP_TIMER_CONFIG_LOG_ENABLED 1
 #endif
 // <o> APP_TIMER_CONFIG_LOG_LEVEL  - Default Severity level
 
